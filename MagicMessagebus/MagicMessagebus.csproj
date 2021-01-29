@@ -11,11 +11,19 @@
     <Description>A very simple, convention-based pub/sub messagebus for .NET solutions</Description>
     <PackageProjectUrl>https://github.com/Heras/MagicMessagebus</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
+    <PackageIcon>magicmessagebus-nuget-icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Ninject" Version="3.3.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\Desktop\magicmessagebus-nuget-icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
