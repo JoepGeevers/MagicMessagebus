@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace MagicMessagebus.Contract
+﻿namespace MagicMessagebus.Contract
 {
+    using System;
+
     public interface IErrorTracker
     {
         void Track(Exception e);

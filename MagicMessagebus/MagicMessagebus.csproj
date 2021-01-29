@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -16,13 +16,6 @@
 
   <ItemGroup>
     <PackageReference Include="Ninject" Version="3.3.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\MagicMessagebus.Contract\MagicMessagebus.Contract.csproj">
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <IncludeAssets>MagicMessagebus.Contract.dll</IncludeAssets>
-    </ProjectReference>
   </ItemGroup>
 
 </Project>
