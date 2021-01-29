@@ -5,7 +5,7 @@
    
     public class HelloWorld : IMagicMessage
     {
-	    /* your stuff goes here */
+        /* your stuff goes here */
     }
 
 2. Publish that message
