@@ -4,13 +4,14 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>MagicMessagebus</PackageId>
     <Authors>Joep Geevers</Authors>
-    <Company>oep Geevers</Company>
+    <Company>Joep Geevers</Company>
     <Product>MagicMessagebus</Product>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Copyright>Joep Geevers</Copyright>
     <Description>A very simple, convention-based pub/sub messagebus for .NET solutions</Description>
     <PackageProjectUrl>https://github.com/Heras/MagicMessagebus</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MagicMessagebus.Contract\MagicMessagebus.Contract.csproj" />
+    <ProjectReference Include="..\MagicMessagebus.Contract\MagicMessagebus.Contract.csproj">
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <IncludeAssets>MagicMessagebus.Contract.dll</IncludeAssets>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>
