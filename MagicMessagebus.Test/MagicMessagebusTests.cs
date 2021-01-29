@@ -44,6 +44,21 @@ namespace MagicMessagebus.Implementation.Test
             Assert.AreEqual(7654, InstanceKissReceiver.KissesReceived);
             Assert.AreEqual(0, SomeOtherInstanceKissReceiver.KissesReceived);
         }
+
+        [TestMethod]
+        public void BindingMagicMessagebusWithoutBindingForIErrorTrackerStillCreatesMessagebus()
+        {
+            // arrange
+            var kernel = new StandardKernel();
+            kernel.Bind<IMagicMessagebus>().To<MagicMessagebus>();
+
+            // act
+            var messagebus = kernel.Get<IMagicMessagebus>();
+
+            // assert
+            Assert.IsNotNull(messagebus);
+            Assert.IsInstanceOfType(messagebus, typeof(IMagicMessagebus));
+        }
     }
 
     public static class StaticKissReceiver

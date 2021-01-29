@@ -17,7 +17,7 @@
         private readonly IKernel kernel;
 
         public MagicMessagebus(
-            IErrorTracker errorTracker,
+            [Optional]IErrorTracker errorTracker,
             IKernel kernel)
         {
             this.errorTracker = errorTracker;
