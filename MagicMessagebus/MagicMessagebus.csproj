@@ -8,11 +8,12 @@
     <Product>MagicMessagebus</Product>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Copyright>Joep Geevers</Copyright>
-    <Description>The simplest pub/sub messagebus that could possibly work. Like magic.</Description>
+    <Description>A ridiculously simple yet powerful publish-subscribe messagebus for your .NET project</Description>
     <PackageProjectUrl>https://github.com/Heras/MagicMessagebus</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
     <PackageIcon>magicmessagebus-nuget-icon.png</PackageIcon>
+    <PackageTags>messagebus publish subscribe pubsub pub sub async asynchronous</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
