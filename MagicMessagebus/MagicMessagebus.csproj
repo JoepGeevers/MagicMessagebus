@@ -11,7 +11,7 @@
     <Description>A very simple, convention-based pub/sub messagebus for .NET solutions</Description>
     <PackageProjectUrl>https://github.com/Heras/MagicMessagebus</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
