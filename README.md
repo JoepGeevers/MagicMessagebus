@@ -16,7 +16,7 @@ The simplest example that could possibly work (but for the love of god, please d
        var messagebus = new MagicMessagebus();
        messagebus.Publish(new HelloWorld());
 
-3. Subcribe to that message anywhere in your code (static though)
+3. Subcribe to that message anywhere in your code
 
        public static void Subscribe(HelloWorld message)
        {
