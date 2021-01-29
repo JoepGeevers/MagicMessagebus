@@ -8,7 +8,7 @@
     <Product>MagicMessagebus</Product>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Copyright>Joep Geevers</Copyright>
-    <Description>A ridiculously simple yet powerful publish-subscribe messagebus for your .NET project</Description>
+    <Description>A ridiculously simple yet powerful publish-subscribe messagebus that fits seamlessly into your .NET project</Description>
     <PackageProjectUrl>https://github.com/Heras/MagicMessagebus</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Version>1.0.5</Version>
