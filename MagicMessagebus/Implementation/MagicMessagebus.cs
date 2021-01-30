@@ -95,7 +95,7 @@
         {
             if (method.IsStatic)
             {
-                method.Invoke(null, new object[] { message });
+                this.Invoke(method, message, null);
             }
             else
             {
@@ -106,23 +106,28 @@
 
                 var service = this.GetService(method);
 
-                Task.Run(() =>
-                {
-                    try
-                    {
-                        method.Invoke(service, new object[] { message });
-                    }
-                    catch (Exception e)
-                    {
-                        if (this.errorTracker == null)
-                        {
-                            throw;
-                        }
-
-                        this.errorTracker.Track(e);
-                    }
-                });
+                this.Invoke(method, message, service);
             }
+        }
+
+        private void Invoke(MethodInfo method, IMagicMessage message, object service)
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    method.Invoke(service, new object[] { message });
+                }
+                catch (Exception e)
+                {
+                    if (this.errorTracker == null)
+                    {
+                        throw;
+                    }
+
+                    this.errorTracker.Track(e);
+                }
+            });
         }
 
         private object GetService(MethodInfo method)
