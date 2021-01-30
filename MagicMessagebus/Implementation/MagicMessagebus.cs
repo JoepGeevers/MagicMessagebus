@@ -16,9 +16,13 @@
         private readonly IErrorTracker errorTracker;
         private readonly IKernel kernel;
 
+        public MagicMessagebus() : this(null, null) { }
+        public MagicMessagebus(IErrorTracker errorTracker) : this(errorTracker, null) { }
+        public MagicMessagebus(IKernel kernel) : this(null, kernel) { }
+
         public MagicMessagebus(
-            [Optional]IErrorTracker errorTracker = null,
-            IKernel kernel = null)
+            IErrorTracker errorTracker,
+            IKernel kernel)
         {
             this.errorTracker = errorTracker;
             this.kernel = kernel;
