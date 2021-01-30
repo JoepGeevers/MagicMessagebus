@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagicMessagebus", "MagicMes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{6F00E322-1914-45E6-9A1A-A6D54FC4388C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleStaticMagicMessagebusExample", "SimpleStaticMagicMessagebusExample\SimpleStaticMagicMessagebusExample.csproj", "{C90A8806-874F-425C-A60D-03A74B7040A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleStaticMagicMessagebusExample", "SimpleStaticMagicMessagebusExample\SimpleStaticMagicMessagebusExample.csproj", "{C90A8806-874F-425C-A60D-03A74B7040A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NinjectMagicMessagebusExample", "NinjectMagicMessagebusExample\NinjectMagicMessagebusExample.csproj", "{CF43D6BD-2CEB-468B-B877-A53091965C32}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,12 +31,17 @@ Global
 		{C90A8806-874F-425C-A60D-03A74B7040A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C90A8806-874F-425C-A60D-03A74B7040A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C90A8806-874F-425C-A60D-03A74B7040A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF43D6BD-2CEB-468B-B877-A53091965C32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF43D6BD-2CEB-468B-B877-A53091965C32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF43D6BD-2CEB-468B-B877-A53091965C32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF43D6BD-2CEB-468B-B877-A53091965C32}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C90A8806-874F-425C-A60D-03A74B7040A9} = {6F00E322-1914-45E6-9A1A-A6D54FC4388C}
+		{CF43D6BD-2CEB-468B-B877-A53091965C32} = {6F00E322-1914-45E6-9A1A-A6D54FC4388C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DE8DB150-B78D-40EB-AF81-81FEC01629AC}
