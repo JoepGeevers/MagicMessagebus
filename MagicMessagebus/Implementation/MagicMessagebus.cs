@@ -6,7 +6,6 @@
     using System.Reflection;
     using System.Threading.Tasks;
 
-    using Microsoft.Extensions.DependencyInjection;
     using Ninject;
     using Ninject.Parameters;
 
@@ -17,7 +16,6 @@
         private readonly IErrorTracker errorTracker;
         private readonly IKernel kernel;
         private readonly IServiceProvider serviceProvider;
-        private readonly IServiceCollection serviceCollection;
 
         public MagicMessagebus() : this(null, null, null) { }
         public MagicMessagebus(IErrorTracker errorTracker) : this(errorTracker, null, null) { }
