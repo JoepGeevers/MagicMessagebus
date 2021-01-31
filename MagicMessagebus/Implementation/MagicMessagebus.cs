@@ -6,6 +6,7 @@
     using System.Reflection;
     using System.Threading.Tasks;
 
+    using Microsoft.Extensions.DependencyInjection;
     using Ninject;
     using Ninject.Parameters;
 
@@ -15,17 +16,24 @@
     {
         private readonly IErrorTracker errorTracker;
         private readonly IKernel kernel;
+        private readonly IServiceProvider serviceProvider;
+        private readonly IServiceCollection serviceCollection;
 
-        public MagicMessagebus() : this(null, null) { }
-        public MagicMessagebus(IErrorTracker errorTracker) : this(errorTracker, null) { }
-        public MagicMessagebus(IKernel kernel) : this(null, kernel) { }
+        public MagicMessagebus() : this(null, null, null) { }
+        public MagicMessagebus(IErrorTracker errorTracker) : this(errorTracker, null, null) { }
+        public MagicMessagebus(IKernel kernel) : this(null, kernel, null) { }
+        public MagicMessagebus(IErrorTracker errorTracker, IKernel kernel) : this(errorTracker, kernel, null) { }
+        public MagicMessagebus(IServiceProvider serviceProvider) : this(null, null, serviceProvider) { }
+        public MagicMessagebus(IErrorTracker errorTracker, IServiceProvider serviceProvider) : this(errorTracker, null, serviceProvider) { }
 
         public MagicMessagebus(
             IErrorTracker errorTracker,
-            IKernel kernel)
+            IKernel kernel,
+            IServiceProvider serviceProvider)
         {
             this.errorTracker = errorTracker;
             this.kernel = kernel;
+            this.serviceProvider = serviceProvider;
 
             if (Map == null)
             {
@@ -77,7 +85,7 @@
                 }
             }
         }
-
+        
         private static readonly object key = new object();
 
         private static List<IGrouping<Type, MethodInfo>> Map { get; set; } // static because tests fail if mapped twice in one application, which should never be necessary anyway
@@ -99,12 +107,13 @@
             }
             else
             {
-                if (this.kernel == null)
+                var service = this.GetServiceFromNinject(method)
+                    ?? this.GetServiceFromServiceProvider(method);
+
+                if (service == null)
                 {
                     return;
                 }
-
-                var service = this.GetService(method);
 
                 this.Invoke(method, message, service);
             }
@@ -130,8 +139,13 @@
             });
         }
 
-        private object GetService(MethodInfo method)
+        private object GetServiceFromNinject(MethodInfo method)
         {
+            if (this.kernel == null)
+            {
+                return null;
+            }
+
             var get = typeof(ResolutionExtensions)
                 .GetMethods()
                 .Where(m2 => m2.Name == "Get")
@@ -143,6 +157,16 @@
                 .Invoke(null, new object[] { this.kernel, new IParameter[] { } });
 
             return result;
+        }
+
+        private object GetServiceFromServiceProvider(MethodInfo method)
+        {
+            if (this.serviceProvider == null)
+            {
+                return null;
+            }
+
+            return this.serviceProvider.GetService(method.DeclaringType);
         }
     }
 }

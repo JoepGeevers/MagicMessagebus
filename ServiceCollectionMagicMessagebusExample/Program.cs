@@ -1,23 +1,22 @@
-﻿namespace NinjectMagicMessagebusExample
+﻿namespace ServiceCollectionMagicMessagebusExample
 {
-    using System;
-    using System.Threading;
-
     using MagicMessagebus.Contract;
     using MagicMessagebus.Implementation;
-    using Ninject;
+    using Microsoft.Extensions.DependencyInjection;
+    using System;
+    using System.Threading;
 
     class Program
     {
         static void Main()
         {
-            var kernel = new StandardKernel();
+            var provider = new ServiceCollection()
+                .AddSingleton<IWakeUpSometimes, ComputerProgram>()
+                .AddSingleton<IWriteToTheConsole, ConsoleWriter>()
+                .AddSingleton<IMagicMessagebus, MagicMessagebus>()
+                .BuildServiceProvider();
 
-            kernel.Bind<IWakeUpSometimes>().To<ComputerProgram>().InSingletonScope();
-            kernel.Bind<IWriteToTheConsole>().To<ConsoleWriter>().InSingletonScope();
-            kernel.Bind<IMagicMessagebus>().To<MagicMessagebus>().InSingletonScope();
-
-            var waker = kernel.Get<IWakeUpSometimes>();
+            var waker = provider.GetService<IWakeUpSometimes>();
 
             waker.WakeUp();
 
