@@ -1,6 +1,7 @@
 ﻿namespace SimpleStaticMagicMessagebusExample
 {
     using System;
+    using System.Threading;
 
     using MagicMessagebus.Contract;
     using MagicMessagebus.Implementation;
@@ -17,6 +18,8 @@
             };
 
             messagebus.Publish(message);
+
+            Thread.Sleep(100); // It's fire and forget, so we need the message to get through before the application finishes
         }
     }
 

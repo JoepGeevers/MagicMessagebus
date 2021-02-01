@@ -83,7 +83,7 @@
                 }
             }
         }
-        
+
         private static readonly object key = new object();
 
         private static List<IGrouping<Type, MethodInfo>> Map { get; set; } // static because tests fail if mapped twice in one application, which should never be necessary anyway
@@ -105,8 +105,7 @@
             }
             else
             {
-                var service = this.GetServiceFromNinject(method)
-                    ?? this.GetServiceFromServiceProvider(method);
+                var service = this.GetService(method);
 
                 if (service == null)
                 {
@@ -137,24 +136,11 @@
             });
         }
 
-        private object GetServiceFromNinject(MethodInfo method)
+        private object GetService(MethodInfo method)
         {
-            if (this.kernel == null)
-            {
-                return null;
-            }
-
-            return this.kernel.Get(method.DeclaringType);
-        }
-
-        private object GetServiceFromServiceProvider(MethodInfo method)
-        {
-            if (this.serviceProvider == null)
-            {
-                return null;
-            }
-
-            return this.serviceProvider.GetService(method.DeclaringType);
+            return this.kernel?.Get(method.DeclaringType)
+                ?? this.serviceProvider?.GetService(method.DeclaringType)
+                ?? null;
         }
     }
 }
