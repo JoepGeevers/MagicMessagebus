@@ -144,17 +144,7 @@
                 return null;
             }
 
-            var get = typeof(ResolutionExtensions)
-                .GetMethods()
-                .Where(m2 => m2.Name == "Get")
-                .Where(m2 => m2.IsGenericMethod)
-                .Where(m2 => m2.GetParameters().Count() == 2)
-                .Single();
-
-            var result = get.MakeGenericMethod(method.DeclaringType)
-                .Invoke(null, new object[] { this.kernel, new IParameter[] { } });
-
-            return result;
+            return this.kernel.Get(method.DeclaringType);
         }
 
         private object GetServiceFromServiceProvider(MethodInfo method)
