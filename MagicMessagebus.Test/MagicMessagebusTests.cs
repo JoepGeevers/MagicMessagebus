@@ -1,9 +1,12 @@
 namespace MagicMessagebus.Implementation.Test
 {
+    using System;
+    using System.Net;
     using System.Threading;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Ninject;
+    using NSubstitute;
 
     using Contract;
 
@@ -59,6 +62,33 @@ namespace MagicMessagebus.Implementation.Test
             Assert.IsNotNull(messagebus);
             Assert.IsInstanceOfType(messagebus, typeof(IMagicMessagebus));
         }
+
+        [TestMethod]
+        public void IfSubscribeReturnsUnsuccessfullStatusCode_ExceptionIsTracked()
+        {
+            // arrange
+            var kernel = new StandardKernel();
+            kernel.Bind<IKissReceiver>().To<InstanceKissReceiver>();
+            
+            var fakeErrorTracker = Substitute.For<IErrorTracker>();
+
+            Exception caught = null;
+
+            fakeErrorTracker
+                .When(x => x.Track(Arg.Any<Exception>()))
+                .Do(x => { caught = x.Arg<Exception>(); });
+
+            var messagebus = new MagicMessagebus(fakeErrorTracker, kernel);
+            var message = new MerryExplodingChristmas();
+
+            // act
+            messagebus.Publish(message);
+            Thread.Sleep(100); // todo: make it work with no sleep by collecting all the methods an invoke them without interruptions
+
+            // assert
+            Assert.IsNotNull(caught);
+            Assert.IsInstanceOfType(caught, typeof(MagicMessagebusException));
+        }
     }
 
     public static class StaticKissReceiver
@@ -79,6 +109,11 @@ namespace MagicMessagebus.Implementation.Test
         {
             KissesReceived += wish.Kisses;
         }
+
+        public HttpStatusCode Subscribe(MerryExplodingChristmas wish)
+        {
+            return (HttpStatusCode)987;
+        }
     }
 
     public class SomeOtherInstanceKissReceiver : IKissReceiver
@@ -89,11 +124,17 @@ namespace MagicMessagebus.Implementation.Test
         {
             KissesReceived = wish.Kisses;
         }
+
+        public HttpStatusCode Subscribe(MerryExplodingChristmas wish)
+        {
+            return (HttpStatusCode)987;
+        }
     }
 
     public interface IKissReceiver
     {
         void Subscribe(MerryChristmas wish);
+        HttpStatusCode Subscribe(MerryExplodingChristmas wish);
     }
 
     public class MerryChristmas : IMagicMessage
@@ -104,5 +145,9 @@ namespace MagicMessagebus.Implementation.Test
         }
 
         public int Kisses { get; set; }
+    }
+
+    public class MerryExplodingChristmas : IMagicMessage
+    {
     }
 }

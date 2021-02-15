@@ -3,11 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
     using System.Reflection;
     using System.Threading.Tasks;
 
+    using Geevers.Infrastructure;
     using Ninject;
-    using Ninject.Parameters;
 
     using Contract;
 
@@ -122,7 +123,25 @@
             {
                 try
                 {
-                    method.Invoke(service, new object[] { message });
+                    var result = method.Invoke(service, new object[] { message });
+
+                    if (result is HttpStatusCode)
+                    {
+                        var status = (HttpStatusCode)result;
+
+                        if (false == status.IsSuccessStatusCode())
+                        {
+                            throw new MagicMessagebusException("A subscriber to the MagicMessagebus returned an unsuccessfull status code")
+                            {
+                                Data = {
+                                    { "Service", service.GetType().Name },
+                                    { "Method", method.Name },
+                                    { "Message", message },
+                                    { "Status", status },
+                                },
+                            };
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
