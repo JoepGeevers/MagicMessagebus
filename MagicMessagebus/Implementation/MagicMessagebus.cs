@@ -8,6 +8,7 @@
     using System.Threading.Tasks;
 
     using Geevers.Infrastructure;
+    using Newtonsoft.Json;
     using Ninject;
 
     using Contract;
@@ -136,7 +137,7 @@
                                 Data = {
                                     { "Service", service.GetType().Name },
                                     { "Method", method.Name },
-                                    { "Message", message },
+                                    { "Message", JsonConvert.SerializeObject(message, Formatting.Indented) },
                                     { "Status", status },
                                 },
                             };
