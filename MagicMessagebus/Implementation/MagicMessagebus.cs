@@ -16,8 +16,8 @@
     public class MagicMessagebus : IMagicMessagebus
     {
         private readonly IErrorTracker errorTracker;
-        private readonly IKernel kernel;
-        private readonly IServiceProvider serviceProvider;
+        private readonly IKernel ninject;
+        private readonly IServiceProvider dotnet;
 
         public MagicMessagebus() : this(null, null, null) { }
         public MagicMessagebus(IErrorTracker errorTracker) : this(errorTracker, null, null) { }
@@ -28,12 +28,13 @@
 
         public MagicMessagebus(
             IErrorTracker errorTracker,
-            IKernel kernel,
-            IServiceProvider serviceProvider)
+            IKernel ninject,
+            IServiceProvider dotnet)
         {
             this.errorTracker = errorTracker;
-            this.kernel = kernel;
-            this.serviceProvider = serviceProvider;
+
+            this.ninject = ninject;
+            this.dotnet = dotnet;
 
             if (Map == null)
             {
@@ -158,8 +159,8 @@
 
         private object GetService(MethodInfo method)
         {
-            return this.kernel?.Get(method.DeclaringType)
-                ?? this.serviceProvider?.GetService(method.DeclaringType)
+            return this.ninject?.Get(method.DeclaringType)
+                ?? this.dotnet?.GetService(method.DeclaringType)
                 ?? null;
         }
     }
