@@ -85,6 +85,8 @@
                     }
                 }
             }
+
+            this.Publish(new StartupStaticSelftest());
         }
 
         private static readonly object key = new object();
@@ -127,6 +129,8 @@
                 {
                     var result = method.Invoke(service, new object[] { message });
 
+                    this.VerifyInitializationTestMessage(message, result);
+
                     if (result is HttpStatusCode)
                     {
                         var status = (HttpStatusCode)result;
@@ -157,11 +161,34 @@
             });
         }
 
+        private void VerifyInitializationTestMessage(IMagicMessage message, object result)
+        {
+            if (message is StartupStaticSelftest)
+            {
+                if (false == result is HttpStatusCode)
+                {
+                    throw new MagicMessagebusException("MagicMessagebus is not working as it should. Startup selftest failed: Static subscription did not return an HttpStatusCode");
+                }
+
+                var status = (HttpStatusCode)result;
+
+                if (status != (HttpStatusCode)299)
+                {
+                    throw new MagicMessagebusException("MagicMessagebus is not working as it should. Startup selftest failed: Static subscription did not return the expected HttpStatusCode");
+                }
+            }
+        }
+
         private object GetService(MethodInfo method)
         {
             return this.ninject?.Get(method.DeclaringType)
                 ?? this.dotnet?.GetService(method.DeclaringType)
                 ?? null;
+        }
+
+        public static HttpStatusCode Subscribe(StartupStaticSelftest message)
+        {
+            return (HttpStatusCode)299;
         }
     }
 }
