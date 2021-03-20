@@ -17,6 +17,8 @@ namespace MagicMessagebus.Implementation.Test
         public void AnyStaticMethodThatExpectsAnIMagicMessageWillBeCalledWhenCorrespondingMessageIsPublished()
         {
             // arrange
+            MagicMessagebus.Map = null;
+
             var messagebus = new MagicMessagebus(null, null);
             var message = new MerryChristmas(8765);
 
@@ -33,10 +35,13 @@ namespace MagicMessagebus.Implementation.Test
         public void SubscribeMethodsFoundInInterfacesUseNinjectToResolveImplementationAndAreCalled()
         {
             // arrange
+            MagicMessagebus.Map = null;
+
             var kernel = new StandardKernel();
             kernel.Bind<IKissReceiver>().To<InstanceKissReceiver>();
+            kernel.Bind<IMagicMessagebus>().To<MagicMessagebus>();
 
-            var messagebus = new MagicMessagebus(null, kernel);
+            var messagebus = kernel.Get<IMagicMessagebus>();
             var message = new MerryChristmas(7654);
 
             // act
@@ -52,8 +57,10 @@ namespace MagicMessagebus.Implementation.Test
         public void BindingMagicMessagebusWithoutBindingForIErrorTrackerStillCreatesMessagebus()
         {
             // arrange
+            MagicMessagebus.Map = null;
+
             var kernel = new StandardKernel();
-            kernel.Bind<IMagicMessagebus>().To<MagicMessagebus>();
+            kernel.Bind<IMagicMessagebus>().To<MagicMessagebus>().InSingletonScope();
 
             // act
             var messagebus = kernel.Get<IMagicMessagebus>();
@@ -67,10 +74,15 @@ namespace MagicMessagebus.Implementation.Test
         public void IfSubscribeReturnsUnsuccessfullStatusCode_ExceptionIsTracked()
         {
             // arrange
-            var kernel = new StandardKernel();
-            kernel.Bind<IKissReceiver>().To<InstanceKissReceiver>();
-            
+            MagicMessagebus.Map = null;
+
             var fakeErrorTracker = Substitute.For<IErrorTracker>();
+
+            var kernel = new StandardKernel();
+
+            kernel.Bind<IMagicMessagebus>().To<MagicMessagebus>();
+            kernel.Bind<IErrorTracker>().ToConstant(fakeErrorTracker);
+            kernel.Bind<IKissReceiver>().To<InstanceKissReceiver>();
 
             Exception caught = null;
 
@@ -78,7 +90,7 @@ namespace MagicMessagebus.Implementation.Test
                 .When(x => x.Track(Arg.Any<Exception>()))
                 .Do(x => { caught = x.Arg<Exception>(); });
 
-            var messagebus = new MagicMessagebus(fakeErrorTracker, kernel);
+            var messagebus = kernel.Get<IMagicMessagebus>();
             var message = new MerryExplodingChristmas();
 
             // act

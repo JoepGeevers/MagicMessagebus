@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\..\Desktop\magicmessagebus-nuget-icon.png">
+    <None Include="magicmessagebus-nuget-icon.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

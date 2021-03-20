@@ -48,7 +48,7 @@
                             {
                                 try
                                 {
-                                    return a.GetExportedTypes();
+                                    return a.GetTypes();
                                 }
                                 catch (Exception e)
                                 {
@@ -84,29 +84,35 @@
                             .ToList();
                     }
                 }
-            }
 
-            this.Publish(new StartupStaticSelftest());
+                this.Publish(new StartupStaticSelftest(), true);
+                this.Publish(new StartupInstanceSelftest(), true);
+            }
         }
 
         private static readonly object key = new object();
 
-        private static List<IGrouping<Type, MethodInfo>> Map { get; set; } // static because tests fail if mapped twice in one application, which should never be necessary anyway
+        internal static List<IGrouping<Type, MethodInfo>> Map { get; set; } // static because tests fail if mapped twice in one application, which should never be necessary anyway
 
         public void Publish(IMagicMessage message)
+        {
+            this.Publish(message, false);
+        }
+
+        private void Publish(IMagicMessage message, bool selftest)
         {
             Map
                 .Single(m => m.Key.Equals(message.GetType()))
                 .Select(g => g)
                 .ToList()
-                .ForEach(m => this.Invoke(m, message));
+                .ForEach(m => this.Invoke(m, message, selftest));
         }
 
-        private void Invoke(MethodInfo method, IMagicMessage message)
+        private void Invoke(MethodInfo method, IMagicMessage message, bool selftest)
         {
             if (method.IsStatic)
             {
-                this.Invoke(method, message, null);
+                this.Invoke(method, message, null, selftest);
             }
             else
             {
@@ -117,48 +123,60 @@
                     return;
                 }
 
-                this.Invoke(method, message, service);
+                this.Invoke(method, message, service, selftest);
+            }
+        }
+
+        private void Invoke(MethodInfo method, IMagicMessage message, object service, bool invokeSynchronously)
+        {
+            if (invokeSynchronously)
+            {
+                Invoke(method, message, service);
+            }
+            else
+            {
+                Task.Run(() =>
+                {
+                    Invoke(method, message, service);
+                });
             }
         }
 
         private void Invoke(MethodInfo method, IMagicMessage message, object service)
         {
-            Task.Run(() =>
+            try
             {
-                try
+                var result = method.Invoke(service, new object[] { message });
+
+                this.VerifyInitializationTestMessage(message, result);
+
+                if (result is HttpStatusCode)
                 {
-                    var result = method.Invoke(service, new object[] { message });
+                    var status = (HttpStatusCode)result;
 
-                    this.VerifyInitializationTestMessage(message, result);
-
-                    if (result is HttpStatusCode)
+                    if (false == status.IsSuccessStatusCode())
                     {
-                        var status = (HttpStatusCode)result;
-
-                        if (false == status.IsSuccessStatusCode())
+                        throw new MagicMessagebusException("A subscriber to the MagicMessagebus returned an unsuccessfull status code")
                         {
-                            throw new MagicMessagebusException("A subscriber to the MagicMessagebus returned an unsuccessfull status code")
-                            {
-                                Data = {
+                            Data = {
                                     { "Service", service.GetType().Name },
                                     { "Method", method.Name },
                                     { "Message", JsonConvert.SerializeObject(message, Formatting.Indented) },
                                     { "Status", status },
-                                },
-                            };
-                        }
+                            },
+                        };
                     }
                 }
-                catch (Exception e)
+            }
+            catch (Exception e)
+            {
+                if (this.errorTracker == null)
                 {
-                    if (this.errorTracker == null)
-                    {
-                        throw;
-                    }
-
-                    this.errorTracker.Track(e);
+                    throw;
                 }
-            });
+
+                this.errorTracker.Track(e);
+            }
         }
 
         private void VerifyInitializationTestMessage(IMagicMessage message, object result)
@@ -177,6 +195,21 @@
                     throw new MagicMessagebusException("MagicMessagebus is not working as it should. Startup selftest failed: Static subscription did not return the expected HttpStatusCode");
                 }
             }
+
+            if (message is StartupInstanceSelftest)
+            {
+                if (false == result is HttpStatusCode)
+                {
+                    throw new MagicMessagebusException("MagicMessagebus is not working as it should. Startup selftest failed: Instance subscription did not return an HttpStatusCode");
+                }
+
+                var status = (HttpStatusCode)result;
+
+                if (status != (HttpStatusCode)299)
+                {
+                    throw new MagicMessagebusException("MagicMessagebus is not working as it should. Startup selftest failed: Instance subscription did not return the expected HttpStatusCode");
+                }
+            }
         }
 
         private object GetService(MethodInfo method)
@@ -187,6 +220,11 @@
         }
 
         public static HttpStatusCode Subscribe(StartupStaticSelftest message)
+        {
+            return (HttpStatusCode)299;
+        }
+
+        public HttpStatusCode Subscribe(StartupInstanceSelftest message)
         {
             return (HttpStatusCode)299;
         }
