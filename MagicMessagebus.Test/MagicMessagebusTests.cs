@@ -19,7 +19,7 @@ namespace MagicMessagebus.Implementation.Test
             // arrange
             MagicMessagebus.Map = null;
 
-            var messagebus = new MagicMessagebus(null, null);
+            var messagebus = MagicMessagebus.Create();
             var message = new MerryChristmas(8765);
 
             // act

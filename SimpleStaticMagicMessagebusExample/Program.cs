@@ -10,7 +10,7 @@
     {
         static void Main()
         {
-            var messagebus = new MagicMessagebus();
+            var messagebus = MagicMessagebus.Create();
 
             var message = new WelcomeMessage
             {

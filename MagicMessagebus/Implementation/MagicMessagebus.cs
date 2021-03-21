@@ -19,19 +19,13 @@
         private readonly IKernel ninject;
         private readonly IServiceProvider dotnet;
 
-        public MagicMessagebus() : this(null, null, null) { }
-        public MagicMessagebus(IErrorTracker errorTracker) : this(errorTracker, null, null) { }
-        public MagicMessagebus(IKernel kernel) : this(null, kernel, null) { }
-        public MagicMessagebus(IErrorTracker errorTracker, IKernel kernel) : this(errorTracker, kernel, null) { }
-        public MagicMessagebus(IServiceProvider serviceProvider) : this(null, null, serviceProvider) { }
-        public MagicMessagebus(IErrorTracker errorTracker, IServiceProvider serviceProvider) : this(errorTracker, null, serviceProvider) { }
-
+        [Inject]
         public MagicMessagebus(
-            IErrorTracker errorTracker,
-            IKernel ninject,
-            IServiceProvider dotnet)
+            [Optional] IErrorTracker errorTracker,
+            [Optional] IKernel ninject,
+            [Optional] IServiceProvider dotnet)
         {
-            this.errorTracker = errorTracker;
+            this.errorTracker = errorTracker ?? new ExplodingErrorTracker();
 
             this.ninject = ninject;
             this.dotnet = dotnet;
@@ -52,11 +46,6 @@
                                 }
                                 catch (Exception e)
                                 {
-                                    if (this.errorTracker == null)
-                                    {
-                                        throw;
-                                    }
-
                                     this.errorTracker.Track(e);
                                 }
 
@@ -89,6 +78,15 @@
                 this.Publish(new StartupInstanceSelftest(), true);
             }
         }
+
+        public static IMagicMessagebus Create(
+            IErrorTracker errorTracker = null,
+            IKernel ninject = null,
+            IServiceProvider dotnet = null)
+        {
+            return new MagicMessagebus(errorTracker, ninject, dotnet);
+        }
+
 
         private static readonly object key = new object();
 
@@ -170,11 +168,6 @@
             }
             catch (Exception e)
             {
-                if (this.errorTracker == null)
-                {
-                    throw;
-                }
-
                 this.errorTracker.Track(e);
             }
         }
