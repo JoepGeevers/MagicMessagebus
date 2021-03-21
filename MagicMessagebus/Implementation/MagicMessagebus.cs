@@ -19,11 +19,15 @@
         private readonly IKernel ninject;
         private readonly IServiceProvider dotnet;
 
-        [Inject]
-        public MagicMessagebus(
-            [Optional] IErrorTracker errorTracker,
-            [Optional] IKernel ninject,
-            [Optional] IServiceProvider dotnet)
+        // I apologize, but I have not found a way to make optional parameters play nice together with .NET DI and Ninject
+        public MagicMessagebus(                                                                    ) : this(null,         null,    null  ) { }
+        public MagicMessagebus(IErrorTracker errorTracker                                          ) : this(errorTracker, null,    null  ) { }
+        public MagicMessagebus(                            IKernel ninject                         ) : this(null,         ninject, null  ) { }
+        public MagicMessagebus(IErrorTracker errorTracker, IKernel ninject                         ) : this(errorTracker, ninject, null  ) { }
+        public MagicMessagebus(                                             IServiceProvider dotnet) : this(null,         null,    dotnet) { }
+        public MagicMessagebus(IErrorTracker errorTracker,                  IServiceProvider dotnet) : this(errorTracker, null,    dotnet) { }
+        public MagicMessagebus(                            IKernel ninject, IServiceProvider dotnet) : this(null,         ninject, dotnet) { }
+        public MagicMessagebus(IErrorTracker errorTracker, IKernel ninject, IServiceProvider dotnet)
         {
             this.errorTracker = errorTracker ?? new ExplodingErrorTracker();
 
@@ -78,15 +82,6 @@
                 this.Publish(new StartupInstanceSelftest(), true);
             }
         }
-
-        public static IMagicMessagebus Create(
-            IErrorTracker errorTracker = null,
-            IKernel ninject = null,
-            IServiceProvider dotnet = null)
-        {
-            return new MagicMessagebus(errorTracker, ninject, dotnet);
-        }
-
 
         private static readonly object key = new object();
 
