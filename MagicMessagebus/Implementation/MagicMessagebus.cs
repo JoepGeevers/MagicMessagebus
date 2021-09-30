@@ -70,7 +70,7 @@
 
                                 return parameters.Single().ParameterType
                                     .GetInterfaces()
-                                    .Where(i => i.Name == nameof(IMagicMessage))
+                                    .Where(i => i.Name == nameof(global::MagicMessagebus.Contract.IMagicMessage))
                                     .Any();
                             })
                             .GroupBy(m => m.GetParameters().Single().ParameterType) // this might not work. you might need the fullname of the parametertype because assemblies may differ
@@ -86,6 +86,7 @@
         private static readonly object key = new object();
 
         internal static List<IGrouping<Type, MethodInfo>> Map { get; set; } // static because tests fail if mapped twice in one application, which should never be necessary anyway
+        public Action<IMagicMessage> Subscriptions { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public void Publish(IMagicMessage message)
         {
@@ -215,6 +216,49 @@
         public HttpStatusCode Subscribe(StartupInstanceSelftest message)
         {
             return (HttpStatusCode)299;
+        }
+
+        public void Subscribe<T>(Action<T> subscribe)
+        {
+        }
+
+        public void Subscribe<TService, TMessage>()
+            where TService : ISubscriber<TMessage>
+            where TMessage : IMagicMessage
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Subscribe<TSubscription>() where TSubscription : ISubscriber<IMagicMessage>
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SubScribe2<TService, TMessage>(Subscription<TService, TMessage> s)
+            where TService : ISubscriber<TMessage>
+            where TMessage : IMagicMessage
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Subscribe3<TMessage>(Action<TMessage> subscribe)
+        {
+            subscribe.GetMethodInfo();
+        }
+
+        public void Subscribe4(Action<IMagicMessage> subscribe)
+        {
+            var info = subscribe.GetMethodInfo();
+        }
+
+        public void Subscribe5(Action<IMagicMessage> subscribe)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Subscribe6(Func<IMagicMessage, HttpStatusCode> function)
+        {
+            throw new NotImplementedException();
         }
     }
 }

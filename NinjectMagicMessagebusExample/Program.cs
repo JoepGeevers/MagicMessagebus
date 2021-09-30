@@ -1,6 +1,7 @@
 ﻿namespace NinjectMagicMessagebusExample
 {
     using System;
+    using System.Net;
     using System.Threading;
 
     using MagicMessagebus.Contract;
@@ -15,7 +16,15 @@
 
             kernel.Bind<IWakeUpSometimes>().To<ComputerProgram>().InSingletonScope();
             kernel.Bind<IWriteToTheConsole>().To<ConsoleWriter>().InSingletonScope();
+
             kernel.Bind<IMagicMessagebus>().To<MagicMessagebus>().InSingletonScope();
+
+            var bus = kernel.Get<IMagicMessagebus>();
+            
+            bus.Subscribe<IWriteToTheConsole, HelloWorldMessage>();
+
+            var s = new Subscription<IWriteToTheConsole, HelloWorldMessage>();
+            bus.SubScribe2(s);
 
             var waker = kernel.Get<IWakeUpSometimes>();
 
@@ -30,9 +39,8 @@
         void WakeUp();
     }
 
-    public interface IWriteToTheConsole
+    public interface IWriteToTheConsole : ISubscriber<HelloWorldMessage>
     {
-        void Subscribe(HelloWorld message);
     }
 
     public class ComputerProgram : IWakeUpSometimes
@@ -46,7 +54,7 @@
 
         public void WakeUp()
         {
-            var message = new HelloWorld
+            var message = new HelloWorldMessage
             {
                 Body = "Hello, World!",
             };
@@ -55,16 +63,34 @@
         }
     }
 
-    public class HelloWorld : IMagicMessage
+    public class HelloWorldMessage : IMagicMessage
     {
         public string Body { get; set; }
     }
 
     public class ConsoleWriter : IWriteToTheConsole
     {
-        public void Subscribe(HelloWorld message)
+        public ConsoleWriter(IMagicMessagebus messagebus)
         {
-            Console.WriteLine(message.Body);
+            this.Subscribe(this.Foo);
+            this.Subscribe(this.Bar);
+        }
+
+        private void Subscribe(Action<HelloWorldMessage> function)
+        {
+        }
+
+        public void Foo(IMagicMessage message)
+        {
+        }
+
+        public void Bar(HelloWorldMessage message)
+        {
+        }
+
+        public HttpStatusCode Foo(HelloWorldMessage message)
+        {
+            throw new NotImplementedException();
         }
     }
 }
