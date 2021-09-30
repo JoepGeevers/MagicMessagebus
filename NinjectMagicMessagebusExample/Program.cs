@@ -16,15 +16,9 @@
 
             kernel.Bind<IWakeUpSometimes>().To<ComputerProgram>().InSingletonScope();
             kernel.Bind<IWriteToTheConsole>().To<ConsoleWriter>().InSingletonScope();
-
             kernel.Bind<IMagicMessagebus>().To<MagicMessagebus>().InSingletonScope();
 
-            var bus = kernel.Get<IMagicMessagebus>();
-            
-            bus.Subscribe<IWriteToTheConsole, HelloWorldMessage>();
-
-            var s = new Subscription<IWriteToTheConsole, HelloWorldMessage>();
-            bus.SubScribe2(s);
+            kernel.Get<IMagicMessagebus>().Subscribe<IWriteToTheConsole, HelloWorldMessage>();
 
             var waker = kernel.Get<IWakeUpSometimes>();
 
@@ -72,8 +66,8 @@
     {
         public ConsoleWriter(IMagicMessagebus messagebus)
         {
-            this.Subscribe(this.Foo);
-            this.Subscribe(this.Bar);
+            //this.Subscribe(this.Foo);
+            //this.Subscribe(this.Bar);
         }
 
         private void Subscribe(Action<HelloWorldMessage> function)
@@ -88,7 +82,7 @@
         {
         }
 
-        public HttpStatusCode Foo(HelloWorldMessage message)
+        public HttpStatusCode Subscribe(HelloWorldMessage message)
         {
             throw new NotImplementedException();
         }

@@ -95,11 +95,21 @@
 
         private void Publish(IMagicMessage message, bool selftest)
         {
-            Map
-                .Single(m => m.Key.Equals(message.GetType()))
-                .Select(g => g)
-                .ToList()
-                .ForEach(m => this.Invoke(m, message, selftest));
+            //Map
+            //    .Single(m => m.Key.Equals(message.GetType()))
+            //    .Select(g => g)
+            //    .ToList()
+            //    .ForEach(m => this.Invoke(m, message, selftest));
+
+            foreach (var subscriber in subscribers)
+            {
+                if (subscriber.Value.GetType().Equals(message.GetType()))
+                {
+                    var service = (ISubscriber<IMagicMessage>)this.GetService(subscriber.Key);
+
+                    service.Subscribe(message);
+                }
+            }
         }
 
         private void Invoke(MethodInfo method, IMagicMessage message, bool selftest)
@@ -110,7 +120,7 @@
             }
             else
             {
-                var service = this.GetService(method);
+                var service = this.GetService(method.DeclaringType);
 
                 if (service == null)
                 {
@@ -201,10 +211,10 @@
             }
         }
 
-        private object GetService(MethodInfo method)
+        private object GetService(Type type)
         {
-            return this.ninject?.Get(method.DeclaringType)
-                ?? this.dotnet?.GetService(method.DeclaringType)
+            return this.ninject?.Get(type)
+                ?? this.dotnet?.GetService(type)
                 ?? null;
         }
 
@@ -226,7 +236,17 @@
             where TService : ISubscriber<TMessage>
             where TMessage : IMagicMessage
         {
-            throw new NotImplementedException();
+            subscribers.Add(new KeyValuePair<Type, Type>(typeof(TService), typeof(TMessage)));
+        }
+
+        private static readonly List<KeyValuePair<Type, Type>> subscribers = new List<KeyValuePair<Type, Type>>();
+
+        private TService GetService<TService>()
+            where TService: class
+        {
+            return this.ninject?.Get<TService>()
+                ?? (TService)this.dotnet.GetService(typeof(TService))
+                ?? default;
         }
 
         public void Subscribe<TSubscription>() where TSubscription : ISubscriber<IMagicMessage>
