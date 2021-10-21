@@ -1,6 +1,8 @@
 ﻿namespace NinjectMagicMessagebusExample
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
     using System.Threading;
 
@@ -19,6 +21,25 @@
             kernel.Bind<IMagicMessagebus>().To<MagicMessagebus>().InSingletonScope();
 
             kernel.Get<IMagicMessagebus>().Subscribe<IWriteToTheConsole, HelloWorldMessage>();
+
+            var subscription1 = new Subscription<IWriteToTheConsole, HelloWorldMessage>();
+
+            var list = new List<Subscription<ISubscriber<IMagicMessage>, IMagicMessage>>(); // new List<Subscription<ISubscriber<IMagicMessage>, IMagicMessage>();
+
+            // waarom kan dit niet? pak dit eens uit en maak het eens simpeler?
+            //Subscription<ISubscriber<IMagicMessage>, IMagicMessage> foo = new Subscription<IWriteToTheConsole, HelloWorldMessage>();
+
+            // this worked with the out keyword!!!!!
+            List<ISubscriber<IMagicMessage>> lijstje = new List<ISubscriber<IMagicMessage>>
+            {
+                //new ConsoleWriter(null)
+            };
+
+            lijstje.First().Subscribe(new HelloWorldMessage());
+
+            IMagicMessage a = new HelloWorldMessage();
+
+            //list.Add(subscription1);
 
             var waker = kernel.Get<IWakeUpSometimes>();
 

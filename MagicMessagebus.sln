@@ -11,9 +11,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{6F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleStaticMagicMessagebusExample", "SimpleStaticMagicMessagebusExample\SimpleStaticMagicMessagebusExample.csproj", "{C90A8806-874F-425C-A60D-03A74B7040A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NinjectMagicMessagebusExample", "NinjectMagicMessagebusExample\NinjectMagicMessagebusExample.csproj", "{CF43D6BD-2CEB-468B-B877-A53091965C32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NinjectMagicMessagebusExample", "NinjectMagicMessagebusExample\NinjectMagicMessagebusExample.csproj", "{CF43D6BD-2CEB-468B-B877-A53091965C32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceCollectionMagicMessagebusExample", "ServiceCollectionMagicMessagebusExample\ServiceCollectionMagicMessagebusExample.csproj", "{08294FBD-70CE-4A28-AA7D-5EFB35937BEE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceCollectionMagicMessagebusExample", "ServiceCollectionMagicMessagebusExample\ServiceCollectionMagicMessagebusExample.csproj", "{08294FBD-70CE-4A28-AA7D-5EFB35937BEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenericsProblem", "GenericsProblem\GenericsProblem.csproj", "{1747B274-68F1-4B0A-9AE5-9F6EC08B039E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{AAADDAD0-760B-4B6B-B428-B38FFBCE2D49}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +45,14 @@ Global
 		{08294FBD-70CE-4A28-AA7D-5EFB35937BEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08294FBD-70CE-4A28-AA7D-5EFB35937BEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08294FBD-70CE-4A28-AA7D-5EFB35937BEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1747B274-68F1-4B0A-9AE5-9F6EC08B039E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1747B274-68F1-4B0A-9AE5-9F6EC08B039E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1747B274-68F1-4B0A-9AE5-9F6EC08B039E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1747B274-68F1-4B0A-9AE5-9F6EC08B039E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAADDAD0-760B-4B6B-B428-B38FFBCE2D49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAADDAD0-760B-4B6B-B428-B38FFBCE2D49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAADDAD0-760B-4B6B-B428-B38FFBCE2D49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAADDAD0-760B-4B6B-B428-B38FFBCE2D49}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

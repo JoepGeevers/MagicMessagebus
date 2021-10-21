@@ -233,9 +233,12 @@
         }
 
         public void Subscribe<TService, TMessage>()
-            where TService : ISubscriber<TMessage>
-            where TMessage : IMagicMessage
+            where TService : class, ISubscriber<TMessage>
+            where TMessage : class, IMagicMessage
         {
+
+            var k = new KeyValuePair<Type, Type>(typeof(TService), typeof(TMessage));
+
             subscribers.Add(new KeyValuePair<Type, Type>(typeof(TService), typeof(TMessage)));
         }
 
@@ -255,8 +258,8 @@
         }
 
         public void SubScribe2<TService, TMessage>(Subscription<TService, TMessage> s)
-            where TService : ISubscriber<TMessage>
-            where TMessage : IMagicMessage
+            where TService : class, ISubscriber<TMessage>
+            where TMessage : class, IMagicMessage
         {
             throw new NotImplementedException();
         }
