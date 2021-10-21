@@ -26,7 +26,7 @@
         public MagicMessagebus(IErrorTracker errorTracker, IKernel ninject                         ) : this(errorTracker, ninject, null  ) { }
         public MagicMessagebus(                                             IServiceProvider dotnet) : this(null,         null,    dotnet) { }
         public MagicMessagebus(IErrorTracker errorTracker,                  IServiceProvider dotnet) : this(errorTracker, null,    dotnet) { }
-        public MagicMessagebus(                            IKernel ninject, IServiceProvider dotnet) : this(null,         ninject, dotnet) { }
+        public MagicMessagebus(                            IKernel ninject, IServiceProvider dotnet) : this(null,         ninject, dotnet) { } // impossible, but kept for proof of completeness
         public MagicMessagebus(IErrorTracker errorTracker, IKernel ninject, IServiceProvider dotnet)
         {
             this.errorTracker = errorTracker ?? new ExplodingErrorTracker();
