@@ -15,21 +15,30 @@
 
     public class MagicMessagebus : IMagicMessagebus
     {
-        private readonly IErrorTracker errorTracker;
+        internal readonly IErrorTracker errorTracker;
         private readonly IKernel ninject;
         private readonly IServiceProvider dotnet;
+        internal readonly IMagicMessagebusSettings settings;
 
         // I apologize, but I have not found a way to make optional parameters play nice together with .NET DI and Ninject
-        public MagicMessagebus(                                                                    ) : this(null,         null,    null  ) { }
-        public MagicMessagebus(IErrorTracker errorTracker                                          ) : this(errorTracker, null,    null  ) { }
-        public MagicMessagebus(                            IKernel ninject                         ) : this(null,         ninject, null  ) { }
-        public MagicMessagebus(IErrorTracker errorTracker, IKernel ninject                         ) : this(errorTracker, ninject, null  ) { }
-        public MagicMessagebus(                                             IServiceProvider dotnet) : this(null,         null,    dotnet) { }
-        public MagicMessagebus(IErrorTracker errorTracker,                  IServiceProvider dotnet) : this(errorTracker, null,    dotnet) { }
-        public MagicMessagebus(                            IKernel ninject, IServiceProvider dotnet) : this(null,         ninject, dotnet) { } // impossible, but kept for proof of completeness
-        public MagicMessagebus(IErrorTracker errorTracker, IKernel ninject, IServiceProvider dotnet)
+        public MagicMessagebus(                                                                    )                                    : this(null,         null,    null,   null    ) { }
+        public MagicMessagebus(IErrorTracker errorTracker                                          )                                    : this(errorTracker, null,    null,   null    ) { }
+        public MagicMessagebus(                            IKernel ninject                         )                                    : this(null,         ninject, null,   null    ) { }
+        public MagicMessagebus(IErrorTracker errorTracker, IKernel ninject                         )                                    : this(errorTracker, ninject, null,   null    ) { }
+        public MagicMessagebus(                                             IServiceProvider dotnet)                                    : this(null,         null,    dotnet, null    ) { }
+        public MagicMessagebus(IErrorTracker errorTracker,                  IServiceProvider dotnet)                                    : this(errorTracker, null,    dotnet, null    ) { }
+        public MagicMessagebus(                            IKernel ninject, IServiceProvider dotnet)                                    : this(null,         ninject, dotnet, null    ) { } // impossible, but kept for proof of completeness
+        public MagicMessagebus(                                                                      IMagicMessagebusSettings settings) : this(null,         null,    null,   settings) { }
+        public MagicMessagebus(IErrorTracker errorTracker,                                           IMagicMessagebusSettings settings) : this(errorTracker, null,    null,   settings) { }
+        public MagicMessagebus(                            IKernel ninject,                          IMagicMessagebusSettings settings) : this(null,         ninject, null,   settings) { }
+        public MagicMessagebus(IErrorTracker errorTracker, IKernel ninject,                          IMagicMessagebusSettings settings) : this(errorTracker, ninject, null,   settings) { }
+        public MagicMessagebus(                                             IServiceProvider dotnet, IMagicMessagebusSettings settings) : this(null,         null,    dotnet, settings) { }
+        public MagicMessagebus(IErrorTracker errorTracker,                  IServiceProvider dotnet, IMagicMessagebusSettings settings) : this(errorTracker, null,    dotnet, settings) { }
+        public MagicMessagebus(                            IKernel ninject, IServiceProvider dotnet, IMagicMessagebusSettings settings) : this(null,         ninject, dotnet, settings) { } // impossible, but kept for proof of completeness
+        public MagicMessagebus(IErrorTracker errorTracker, IKernel ninject, IServiceProvider dotnet, IMagicMessagebusSettings settings)
         {
             this.errorTracker = errorTracker ?? new ExplodingErrorTracker();
+            this.settings = settings ?? new DefaultSettings();
 
             this.ninject = ninject;
             this.dotnet = dotnet;

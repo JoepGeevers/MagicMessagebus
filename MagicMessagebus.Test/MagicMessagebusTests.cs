@@ -54,7 +54,7 @@ namespace MagicMessagebus.Implementation.Test
         }
 
         [TestMethod]
-        public void BindingMagicMessagebusWithoutBindingForIErrorTrackerStillCreatesMessagebus()
+        public void BindingMagicMessagebus_WithoutBindingForErrorTrackerOrSettings_StillCreatesMessagebus()
         {
             // arrange
             MagicMessagebus.Map = null;
@@ -68,6 +68,44 @@ namespace MagicMessagebus.Implementation.Test
             // assert
             Assert.IsNotNull(messagebus);
             Assert.IsInstanceOfType(messagebus, typeof(IMagicMessagebus));
+        }
+
+        [TestMethod]
+        public void BindingMagicMessagebus_WithoutBindingForErrorTracker_CreatesMessagebusWithDefaultErrorTracker()
+        {
+            // arrange
+            MagicMessagebus.Map = null;
+
+            var kernel = new StandardKernel();
+            kernel.Bind<IMagicMessagebus>().To<MagicMessagebus>().InSingletonScope();
+
+            // act
+            var messagebus = kernel.Get<IMagicMessagebus>();
+
+            // assert
+            var concreteMessagebus = messagebus as MagicMessagebus;
+
+            Assert.IsNotNull(concreteMessagebus);
+            Assert.AreEqual(typeof(ExplodingErrorTracker), concreteMessagebus.errorTracker.GetType());
+        }
+
+        [TestMethod]
+        public void BindingMagicMessagebus_WithoutBindingForSettings_CreatesMessagebusWithDefaultSettings()
+        {
+            // arrange
+            MagicMessagebus.Map = null;
+
+            var kernel = new StandardKernel();
+            kernel.Bind<IMagicMessagebus>().To<MagicMessagebus>().InSingletonScope();
+
+            // act
+            var messagebus = kernel.Get<IMagicMessagebus>();
+
+            // assert
+            var concreteMessagebus = messagebus as MagicMessagebus;
+
+            Assert.IsNotNull(concreteMessagebus);
+            Assert.AreEqual(typeof(DefaultSettings), concreteMessagebus.settings.GetType());
         }
 
         [TestMethod]
