@@ -124,40 +124,6 @@ namespace MagicMessagebus.Implementation.Test
         }
 
         [TestMethod]
-        public void BindingMagicMessagebus_WithoutBindingForErrorTracker_CreatesMessagebusWithDefaultErrorTracker()
-        {
-            // arrange
-            var kernel = new StandardKernel();
-            kernel.Bind<IMagicMessagebus>().To<MagicMessagebus>().InSingletonScope();
-
-            // act
-            var messagebus = kernel.Get<IMagicMessagebus>();
-
-            // assert
-            var concreteMessagebus = messagebus as MagicMessagebus;
-
-            Assert.IsNotNull(concreteMessagebus);
-            Assert.AreEqual(typeof(ExplodingErrorTracker), concreteMessagebus.errorTracker.GetType());
-        }
-
-        [TestMethod]
-        public void BindingMagicMessagebus_WithoutBindingForSettings_CreatesMessagebusWithDefaultSettings()
-        {
-            // arrange
-            var kernel = new StandardKernel();
-            kernel.Bind<IMagicMessagebus>().To<MagicMessagebus>().InSingletonScope();
-
-            // act
-            var messagebus = kernel.Get<IMagicMessagebus>();
-
-            // assert
-            var concreteMessagebus = messagebus as MagicMessagebus;
-
-            Assert.IsNotNull(concreteMessagebus);
-            Assert.AreEqual(typeof(DefaultSettings), concreteMessagebus.settings.GetType());
-        }
-
-        [TestMethod]
         public void IfSubscribeReturnsUnsuccessfullStatusCode_ExceptionIsTracked()
         {
             // arrange
