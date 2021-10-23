@@ -10,14 +10,12 @@
     {
         static void Main()
         {
-            var messagebus = new MagicMessagebus();
-
             var message = new WelcomeMessage
             {
                 Body = "Hello, World!",
             };
 
-            messagebus.Publish(message);
+            MagicMessagebus.Publish(message);
 
             Thread.Sleep(100); // It's fire and forget, so we need the message to get through before the application finishes
         }

@@ -25,11 +25,10 @@ namespace MagicMessagebus.Implementation.Test
         public void AnyStaticMethodThatExpectsAnIMagicMessageWillBeCalledWhenCorrespondingMessageIsPublished()
         {
             // arrange
-            var messagebus = new MagicMessagebus();
             var message = new MerryChristmas(8765);
 
             // act
-            messagebus.Publish(message);
+            MagicMessagebus.Publish(message);
             Thread.Sleep(10); // todo: make it work with no sleep by collecting all the methods an invoke them without interruptions
 
             // assert

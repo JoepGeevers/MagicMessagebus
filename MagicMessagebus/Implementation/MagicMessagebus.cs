@@ -96,9 +96,14 @@
 
         internal static List<IGrouping<Type, MethodInfo>> Map { get; set; } // static because tests fail if mapped twice in one application, which should never be necessary anyway
 
-        public void Publish(IMagicMessage message)
+        void IMagicMessagebus.Publish(IMagicMessage message)
         {
             this.Publish(message, false);
+        }
+
+        public static void Publish(IMagicMessage message)
+        {
+            new MagicMessagebus().Publish(message, false);
         }
 
         private void Publish(IMagicMessage message, bool selftest)
