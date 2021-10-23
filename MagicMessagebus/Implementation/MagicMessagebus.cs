@@ -21,9 +21,11 @@
         private readonly IKernel ninject;
         private readonly IServiceProvider dotnet;
 
-        public MagicMessagebus(IServiceProvider dotnet) : this(dotnet.GetService<IMagicMessagebusSettings>(), dotnet.GetService<IErrorTracker>(), dotnet) { }
+        public MagicMessagebus(IServiceProvider dotnet, IMagicMessagebusSettings settings = null, IErrorTracker errorTracker = null)
+            : this(settings, errorTracker, dotnet) { }
         [Inject]
-        public MagicMessagebus(IKernel ninject) : this(ninject.TryGet<IMagicMessagebusSettings>(), ninject.TryGet<IErrorTracker>(), ninject) { }
+        public MagicMessagebus(IKernel ninject, [Optional] IMagicMessagebusSettings settings, [Optional] IErrorTracker errorTracker)
+            : this(settings, errorTracker, ninject) { }
         public MagicMessagebus(IMagicMessagebusSettings settings = null, IErrorTracker errorTracker = null, IServiceProvider dotnet = null, IKernel ninject = null)
         {
             this.errorTracker = errorTracker ?? new ExplodingErrorTracker();
