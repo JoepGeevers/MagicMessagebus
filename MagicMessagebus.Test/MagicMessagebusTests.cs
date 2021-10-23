@@ -107,6 +107,30 @@ namespace MagicMessagebus.Implementation.Test
         }
 
         [TestMethod]
+        public void ServiceProviderBindingMagicMessagebus_WithoutBindingForErrorTrackerOrSettings_CreatesMessagebusWithDefaultErrorTrackerAndSettings()
+        {
+            // arrange
+            MagicMessagebus.Map = null;
+
+            var collection = new ServiceCollection();
+            collection.AddTransient<IMagicMessagebus, MagicMessagebus>();
+            var provider = collection.BuildServiceProvider();
+
+            // act
+            var messagebus = provider.GetService<IMagicMessagebus>();
+
+            // assert
+            Assert.IsNotNull(messagebus);
+            Assert.IsInstanceOfType(messagebus, typeof(IMagicMessagebus));
+
+            var implementation = messagebus as MagicMessagebus;
+
+            Assert.IsNotNull(implementation);
+            Assert.IsTrue(implementation.settings is DefaultSettings);
+            Assert.IsTrue(implementation.errorTracker is ExplodingErrorTracker);
+        }
+
+        [TestMethod]
         public void BindingMagicMessagebus_WithoutBindingForErrorTracker_CreatesMessagebusWithDefaultErrorTracker()
         {
             // arrange
