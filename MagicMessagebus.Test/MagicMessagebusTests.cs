@@ -18,8 +18,6 @@ namespace MagicMessagebus.Implementation.Test
         public void AnyStaticMethodThatExpectsAnIMagicMessageWillBeCalledWhenCorrespondingMessageIsPublished()
         {
             // arrange
-            MagicMessagebus.Map = null;
-
             var messagebus = new MagicMessagebus();
             var message = new MerryChristmas(8765);
 
@@ -36,7 +34,6 @@ namespace MagicMessagebus.Implementation.Test
         public void SubscribeMethodsFoundInInterfacesUseNinjectToResolveImplementationAndAreCalled()
         {
             // arrange
-            MagicMessagebus.Map = null;
             InstanceKissReceiver.KissesReceived = 0;
             SomeOtherInstanceKissReceiver.KissesReceived = 0;
 
@@ -60,7 +57,6 @@ namespace MagicMessagebus.Implementation.Test
         public void SubscribeMethodsFoundInInterfacesUseServiceProviderToResolveImplementationAndAreCalled()
         {
             // arrange
-            MagicMessagebus.Map = null;
             InstanceKissReceiver.KissesReceived = 0;
             SomeOtherInstanceKissReceiver.KissesReceived = 0;
 
@@ -87,8 +83,6 @@ namespace MagicMessagebus.Implementation.Test
         public void NinjectBindingMagicMessagebus_WithoutBindingForErrorTrackerOrSettings_CreatesMessagebusWithDefaultErrorTrackerAndSettings()
         {
             // arrange
-            MagicMessagebus.Map = null;
-
             var kernel = new StandardKernel();
             kernel.Bind<IMagicMessagebus>().To<MagicMessagebus>().InSingletonScope();
 
@@ -110,8 +104,6 @@ namespace MagicMessagebus.Implementation.Test
         public void ServiceProviderBindingMagicMessagebus_WithoutBindingForErrorTrackerOrSettings_CreatesMessagebusWithDefaultErrorTrackerAndSettings()
         {
             // arrange
-            MagicMessagebus.Map = null;
-
             var collection = new ServiceCollection();
             collection.AddTransient<IMagicMessagebus, MagicMessagebus>();
             var provider = collection.BuildServiceProvider();
@@ -134,8 +126,6 @@ namespace MagicMessagebus.Implementation.Test
         public void BindingMagicMessagebus_WithoutBindingForErrorTracker_CreatesMessagebusWithDefaultErrorTracker()
         {
             // arrange
-            MagicMessagebus.Map = null;
-
             var kernel = new StandardKernel();
             kernel.Bind<IMagicMessagebus>().To<MagicMessagebus>().InSingletonScope();
 
@@ -153,8 +143,6 @@ namespace MagicMessagebus.Implementation.Test
         public void BindingMagicMessagebus_WithoutBindingForSettings_CreatesMessagebusWithDefaultSettings()
         {
             // arrange
-            MagicMessagebus.Map = null;
-
             var kernel = new StandardKernel();
             kernel.Bind<IMagicMessagebus>().To<MagicMessagebus>().InSingletonScope();
 
@@ -172,8 +160,6 @@ namespace MagicMessagebus.Implementation.Test
         public void IfSubscribeReturnsUnsuccessfullStatusCode_ExceptionIsTracked()
         {
             // arrange
-            MagicMessagebus.Map = null;
-
             var fakeErrorTracker = Substitute.For<IErrorTracker>();
 
             var kernel = new StandardKernel();
