@@ -4,6 +4,7 @@ namespace MagicMessagebus.Implementation.Test
     using System.Net;
     using System.Threading;
 
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Ninject;
     using NSubstitute;
@@ -36,12 +37,41 @@ namespace MagicMessagebus.Implementation.Test
         {
             // arrange
             MagicMessagebus.Map = null;
+            InstanceKissReceiver.KissesReceived = 0;
+            SomeOtherInstanceKissReceiver.KissesReceived = 0;
 
             var kernel = new StandardKernel();
             kernel.Bind<IKissReceiver>().To<InstanceKissReceiver>();
             kernel.Bind<IMagicMessagebus>().To<MagicMessagebus>();
 
             var messagebus = kernel.Get<IMagicMessagebus>();
+            var message = new MerryChristmas(7654);
+
+            // act
+            messagebus.Publish(message);
+            Thread.Sleep(10); // todo: make it work with no sleep by collecting all the methods an invoke them without interruptions
+
+            // assert
+            Assert.AreEqual(7654, InstanceKissReceiver.KissesReceived);
+            Assert.AreEqual(0, SomeOtherInstanceKissReceiver.KissesReceived);
+        }
+
+        [TestMethod]
+        public void SubscribeMethodsFoundInInterfacesUseServiceProviderToResolveImplementationAndAreCalled()
+        {
+            // arrange
+            MagicMessagebus.Map = null;
+            InstanceKissReceiver.KissesReceived = 0;
+            SomeOtherInstanceKissReceiver.KissesReceived = 0;
+
+            var collection = new ServiceCollection();
+
+            collection.AddTransient<IKissReceiver, InstanceKissReceiver>();
+            collection.AddTransient<IMagicMessagebus, MagicMessagebus>();
+
+            var provider = collection.BuildServiceProvider();
+
+            var messagebus = provider.GetService<IMagicMessagebus>();
             var message = new MerryChristmas(7654);
 
             // act
