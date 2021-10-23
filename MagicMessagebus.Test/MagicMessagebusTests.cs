@@ -14,6 +14,13 @@ namespace MagicMessagebus.Implementation.Test
     [TestClass]
     public class MagicMessagebusTests
     {
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            InstanceKissReceiver.KissesReceived = 0;
+            SomeOtherInstanceKissReceiver.KissesReceived = 0;
+        }
+
         [TestMethod]
         public void AnyStaticMethodThatExpectsAnIMagicMessageWillBeCalledWhenCorrespondingMessageIsPublished()
         {
@@ -34,9 +41,6 @@ namespace MagicMessagebus.Implementation.Test
         public void SubscribeMethodsFoundInInterfacesUseNinjectToResolveImplementationAndAreCalled()
         {
             // arrange
-            InstanceKissReceiver.KissesReceived = 0;
-            SomeOtherInstanceKissReceiver.KissesReceived = 0;
-
             var kernel = new StandardKernel();
             kernel.Bind<IKissReceiver>().To<InstanceKissReceiver>();
             kernel.Bind<IMagicMessagebus>().To<MagicMessagebus>();
@@ -57,9 +61,6 @@ namespace MagicMessagebus.Implementation.Test
         public void SubscribeMethodsFoundInInterfacesUseServiceProviderToResolveImplementationAndAreCalled()
         {
             // arrange
-            InstanceKissReceiver.KissesReceived = 0;
-            SomeOtherInstanceKissReceiver.KissesReceived = 0;
-
             var collection = new ServiceCollection();
 
             collection.AddTransient<IKissReceiver, InstanceKissReceiver>();
