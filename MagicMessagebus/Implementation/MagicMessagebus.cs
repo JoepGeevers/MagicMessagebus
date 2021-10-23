@@ -15,10 +15,10 @@
 
     public class MagicMessagebus : IMagicMessagebus
     {
+        internal readonly IMagicMessagebusSettings settings;
         internal readonly IErrorTracker errorTracker;
         private readonly IKernel ninject;
         private readonly IServiceProvider dotnet;
-        internal readonly IMagicMessagebusSettings settings;
 
         // I apologize, but I have not found a way to make optional parameters play nice together with .NET DI and Ninject
         public MagicMessagebus(                                                                    )                                    : this(null,         null,    null,   null    ) { }

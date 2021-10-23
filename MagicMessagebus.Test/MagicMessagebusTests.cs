@@ -84,7 +84,7 @@ namespace MagicMessagebus.Implementation.Test
         }
 
         [TestMethod]
-        public void BindingMagicMessagebus_WithoutBindingForErrorTrackerOrSettings_StillCreatesMessagebus()
+        public void NinjectBindingMagicMessagebus_WithoutBindingForErrorTrackerOrSettings_CreatesMessagebusWithDefaultErrorTrackerAndSettings()
         {
             // arrange
             MagicMessagebus.Map = null;
@@ -98,6 +98,12 @@ namespace MagicMessagebus.Implementation.Test
             // assert
             Assert.IsNotNull(messagebus);
             Assert.IsInstanceOfType(messagebus, typeof(IMagicMessagebus));
+
+            var implementation = messagebus as MagicMessagebus;
+
+            Assert.IsNotNull(implementation);
+            Assert.IsTrue(implementation.settings is DefaultSettings);
+            Assert.IsTrue(implementation.errorTracker is ExplodingErrorTracker);
         }
 
         [TestMethod]
