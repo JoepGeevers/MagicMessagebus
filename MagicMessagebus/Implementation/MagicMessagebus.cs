@@ -157,7 +157,7 @@
                         throw new MagicMessagebusException("A subscriber to the MagicMessagebus returned an unsuccessfull status code")
                         {
                             Data = {
-                                    { "Service", service.GetType().Name },
+                                    { "Service", service?.GetType().Name },
                                     { "Method", method.Name },
                                     { "Message", JsonConvert.SerializeObject(message, Formatting.Indented) },
                                     { "Status", status },
