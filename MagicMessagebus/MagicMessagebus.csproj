@@ -11,7 +11,7 @@
     <Description>Add publish/subscribe power to your .NET solution. Like magic.</Description>
     <PackageProjectUrl>https://github.com/Heras/MagicMessagebus</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
     <PackageIcon>magicmessagebus-nuget-icon.png</PackageIcon>
     <PackageTags>messagebus message messaging bus publish subscribe pubsub pub sub async asynchronous</PackageTags>
   </PropertyGroup>
