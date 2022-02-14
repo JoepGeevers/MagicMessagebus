@@ -50,6 +50,8 @@
                                 }
                                 catch (Exception e)
                                 {
+                                    e.Data.Add("Assembly", a.FullName);
+
                                     this.errorTracker.Track(e);
                                 }
 
