@@ -8,7 +8,6 @@
     using System.Threading.Tasks;
 
     using Geevers.Infrastructure;
-    using Microsoft.Extensions.DependencyInjection;
     using Newtonsoft.Json;
     using Ninject;
 
@@ -20,6 +19,8 @@
         internal readonly IErrorTracker errorTracker;
         private readonly IKernel ninject;
         private readonly IServiceProvider dotnet;
+
+        private readonly List<string> blacklistedAssemblies = new List<string> { "Antlr3", "WebGrease", "DotNetOpenAuth" };
 
         public MagicMessagebus(IServiceProvider dotnet, IMagicMessagebusSettings settings = null, IErrorTracker errorTracker = null)
             : this(settings, errorTracker, dotnet) { }
@@ -42,6 +43,7 @@
                     {
                         Map = AppDomain.CurrentDomain.GetAssemblies()
                             .Where(a => false == a.IsDynamic)
+                            .Where(a => false == this.blacklistedAssemblies.Any(b => a.FullName.StartsWith(b)))
                             .SelectMany(a =>
                             {
                                 try
