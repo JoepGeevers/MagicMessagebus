@@ -1,4 +1,5 @@
-﻿namespace MagicMessagebus.Implementation
+﻿
+namespace MagicMessagebus.Implementation
 {
     using System;
     using System.Collections.Generic;
@@ -15,22 +16,23 @@
 
     public class MagicMessagebus : IMagicMessagebus
     {
-        internal readonly IMagicMessagebusSettings settings;
+        internal readonly IMagicMessagebusAssemblyFilter assemblyFilter;
         internal readonly IErrorTracker errorTracker;
         private readonly IKernel ninject;
         private readonly IServiceProvider dotnet;
 
-        private readonly List<string> blacklistedAssemblies = new List<string> { "Antlr3", "WebGrease", "DotNetOpenAuth" };
 
-        public MagicMessagebus(IServiceProvider dotnet, IMagicMessagebusSettings settings = null, IErrorTracker errorTracker = null)
-            : this(settings, errorTracker, dotnet) { }
+        public MagicMessagebus(IServiceProvider dotnet, IMagicMessagebusAssemblyFilter assemblyFilter = null, IErrorTracker errorTracker = null)
+            : this(assemblyFilter, errorTracker, dotnet) { }
+
         [Inject]
-        public MagicMessagebus(IKernel ninject, [Optional] IMagicMessagebusSettings settings, [Optional] IErrorTracker errorTracker)
-            : this(settings, errorTracker, ninject) { }
-        public MagicMessagebus(IMagicMessagebusSettings settings = null, IErrorTracker errorTracker = null, IServiceProvider dotnet = null, IKernel ninject = null)
+        public MagicMessagebus(IKernel ninject, [Optional] IMagicMessagebusAssemblyFilter assemblyFilter, [Optional] IErrorTracker errorTracker)
+            : this(assemblyFilter, errorTracker, ninject) { }
+
+        public MagicMessagebus(IMagicMessagebusAssemblyFilter assemblyFilter = null, IErrorTracker errorTracker = null, IServiceProvider dotnet = null, IKernel ninject = null)
         {
             this.errorTracker = errorTracker ?? new ExplodingErrorTracker();
-            this.settings = settings ?? new DefaultSettings();
+            this.assemblyFilter = assemblyFilter ?? new DefaultAssemblyFilter();
 
             this.ninject = ninject;
             this.dotnet = dotnet;
@@ -43,7 +45,7 @@
                     {
                         Map = AppDomain.CurrentDomain.GetAssemblies()
                             .Where(a => false == a.IsDynamic)
-                            .Where(a => false == this.blacklistedAssemblies.Any(b => a.FullName.StartsWith(b)))
+                            .Where(a => a.FullName.StartsWith("MagicMessagebus.") || this.assemblyFilter.ScanForSubcriptions(a))
                             .SelectMany(a =>
                             {
                                 try
@@ -104,8 +106,8 @@
         private void Publish(IMagicMessage message, bool selftest)
         {
             Map
-                .Single(m => m.Key.Equals(message.GetType()))
-                .Select(g => g)
+                .Where(m => m.Key.Equals(message.GetType()))
+                .SelectMany(g => g)
                 .ToList()
                 .ForEach(m => this.Invoke(m, message, selftest));
         }

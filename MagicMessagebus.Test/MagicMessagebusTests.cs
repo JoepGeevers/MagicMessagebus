@@ -96,7 +96,7 @@ namespace MagicMessagebus.Implementation.Test
             var implementation = messagebus as MagicMessagebus;
 
             Assert.IsNotNull(implementation);
-            Assert.IsTrue(implementation.settings is DefaultSettings);
+            Assert.IsTrue(implementation.assemblyFilter is DefaultAssemblyFilter);
             Assert.IsTrue(implementation.errorTracker is ExplodingErrorTracker);
         }
 
@@ -118,7 +118,7 @@ namespace MagicMessagebus.Implementation.Test
             var implementation = messagebus as MagicMessagebus;
 
             Assert.IsNotNull(implementation);
-            Assert.IsTrue(implementation.settings is DefaultSettings);
+            Assert.IsTrue(implementation.assemblyFilter is DefaultAssemblyFilter);
             Assert.IsTrue(implementation.errorTracker is ExplodingErrorTracker);
         }
 
