@@ -1,5 +1,7 @@
 ﻿namespace MagicMessagebus.Implementation
 {
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
  
@@ -7,14 +9,19 @@
 
     public class DefaultAssemblyFilter : IMagicMessagebusAssemblyFilter
     {
-        private readonly string[] blacklist = new [] {
-            "System",
-            "Microsoft",
-            "netstandard",
-            "Antlr3",
-            "WebGrease",
-            "DotNetOpenAuth",
-        };
+        private readonly List<string> blacklist = new[]
+            {
+                "System",
+                "Microsoft",
+                "netstandard",
+                "Antlr3",
+                "WebGrease",
+                "DotNetOpenAuth",
+                "MailJetClient",
+                "Facebook",
+            }
+            .SelectMany((l) => new[] { ',', '.' }, (l, r) => l + r)
+            .ToList();
 
         public bool ScanForSubcriptions(Assembly assembly)
         {
