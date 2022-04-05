@@ -137,10 +137,11 @@
                 .ScanForSubcriptions(null)
                 .ReturnsForAnyArgs(true);
 
+            IMagicMessagebus messagebus = new MagicMessagebus(filter);
             var message = new SomeMessage();
 
             // act
-            MagicMessagebus.Publish(message);
+            messagebus.Publish(message);
 
             Thread.Sleep(10);
 
@@ -155,9 +156,9 @@
             var filter = Substitute.For<IMagicMessagebusAssemblyFilter>();
             filter
                 .ScanForSubcriptions(null)
-                .Returns(false);
+                .ReturnsForAnyArgs(false);
 
-            var messagebus = (IMagicMessagebus)new MagicMessagebus(filter);
+            IMagicMessagebus messagebus = new MagicMessagebus(filter);
             var message = new SomeMessage();
 
             // act
@@ -168,9 +169,6 @@
             // assert
             Assert.AreNotEqual(message.RandomId, SomeService.RandomId);
         }
-
-        // that the filter is called and the result is used
         // if you filter out magicmessabus itself, it still works
-
     }
 }
