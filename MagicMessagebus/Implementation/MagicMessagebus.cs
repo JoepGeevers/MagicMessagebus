@@ -45,7 +45,7 @@ namespace MagicMessagebus.Implementation
                     {
                         Map = AppDomain.CurrentDomain.GetAssemblies()
                             .Where(a => false == a.IsDynamic)
-                            .Where(a => a.FullName.StartsWith("MagicMessagebus.") || this.assemblyFilter.ScanForSubcriptions(a))
+                            .Where(a => this.assemblyFilter.ScanForSubcriptions(a))
                             .SelectMany(a =>
                             {
                                 try

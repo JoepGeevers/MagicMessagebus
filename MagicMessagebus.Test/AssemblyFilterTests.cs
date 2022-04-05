@@ -169,6 +169,5 @@
             // assert
             Assert.AreNotEqual(message.RandomId, SomeService.RandomId);
         }
-        // if you filter out magicmessabus itself, it still works
     }
 }
