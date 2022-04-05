@@ -1,17 +1,25 @@
 ﻿namespace MagicMessagebus.Implementation.Test
 {
-    using Contract;
-    using Implementation;
-    using MagicMessagebusTest.SomeAssembly;
+    using System.Threading;
+
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Ninject;
     using NSubstitute;
-    using System.Threading;
+
+    using Contract;
+    using Implementation;
+    using MagicMessagebusTest.SomeAssembly;
 
     [TestClass]
     public class AssemblyFilterTests
     {
+        [TestCleanup()]
+        public void Cleanup()
+        {
+            MagicMessagebus.Map = null;
+        }
+
         [TestMethod]
         public void WhenNinjectConstructsTheMagicMessagbus_WithoutBindingForAssemblyFilter_DefaultAssemblyFilterIsUsed()
         {
@@ -127,9 +135,8 @@
             var filter = Substitute.For<IMagicMessagebusAssemblyFilter>();
             filter
                 .ScanForSubcriptions(null)
-                .Returns(true);
+                .ReturnsForAnyArgs(true);
 
-            var messagebus = new MagicMessagebus(filter);
             var message = new SomeMessage();
 
             // act
