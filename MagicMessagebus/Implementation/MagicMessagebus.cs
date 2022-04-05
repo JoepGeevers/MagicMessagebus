@@ -45,7 +45,7 @@ namespace MagicMessagebus.Implementation
                     {
                         Map = AppDomain.CurrentDomain.GetAssemblies()
                             .Where(a => false == a.IsDynamic)
-                            .Where(a => this.assemblyFilter.ScanForSubcriptions(a))
+                            .Where(a => a.FullName.StartsWith("MagicMessagebus,") || this.assemblyFilter.ScanForSubcriptions(a))
                             .SelectMany(a =>
                             {
                                 try
@@ -105,11 +105,26 @@ namespace MagicMessagebus.Implementation
 
         private void Publish(IMagicMessage message, bool selftest)
         {
-            Map
+            var subscriptions = Map
                 .Where(m => m.Key.Equals(message.GetType()))
                 .SelectMany(g => g)
-                .ToList()
-                .ForEach(m => this.Invoke(m, message, selftest));
+                .ToList();
+
+            if (subscriptions.Any())
+            {
+                subscriptions.ForEach(m => this.Invoke(m, message, selftest));
+            }
+            else
+            {
+                if (selftest)
+                {
+                    this.errorTracker.Track(new MagicMessagebusException($"MagicMessagebus is NOT healthy. Selftest failed for message `{message.GetType()}`. Please contact `nuget.org/packages/MagicMessagebus`"));
+                }
+                else
+                {
+                    this.errorTracker.Track(new MagicMessagebusException($"No subscriptions found for message `{message.GetType()}`"));
+                }
+            }
         }
 
         private void Invoke(MethodInfo method, IMagicMessage message, bool selftest)

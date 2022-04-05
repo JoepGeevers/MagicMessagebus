@@ -158,7 +158,13 @@
                 .ScanForSubcriptions(null)
                 .ReturnsForAnyArgs(false);
 
-            IMagicMessagebus messagebus = new MagicMessagebus(filter);
+            // when we filter assemblies, we might not have subscriptions for messages
+            // this will call the error tracker with an exception
+            // and the default error tracker will throw this exception, which will fail this test
+            // so we give it a different tracker and Assert that it was called as it should
+            var errorTracker = Substitute.For<IErrorTracker>();
+
+            IMagicMessagebus messagebus = new MagicMessagebus(filter, errorTracker);
             var message = new SomeMessage();
 
             // act
@@ -168,6 +174,7 @@
 
             // assert
             Assert.AreNotEqual(message.RandomId, SomeService.RandomId);
+            errorTracker.ReceivedWithAnyArgs(1).Track(Arg.Is<MagicMessagebusException>(e => e.Message.Contains("No subscriptions found for message")));
         }
     }
 }
