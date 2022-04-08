@@ -55,6 +55,7 @@ namespace MagicMessagebus.Implementation
                                 catch (Exception e)
                                 {
                                     e.Data.Add("Assembly", a.FullName);
+                                    e.Data.Add("Version", this.GetType().Assembly.GetName().Version.ToString());
 
                                     this.errorTracker.Track(e);
                                 }
