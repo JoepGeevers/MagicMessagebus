@@ -1,10 +1,8 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 
 [assembly:InternalsVisibleTo("MagicMessagebus.Test")]
 
-namespace MagicMessagebus.Properties
-{
-    public class AssemblyInfo
-    {
-    }
-}
+[assembly: AssemblyVersion("1.1.2")]
+[assembly: AssemblyFileVersion("1.1.2")]
+[assembly: AssemblyInformationalVersion("1.1.2")]
