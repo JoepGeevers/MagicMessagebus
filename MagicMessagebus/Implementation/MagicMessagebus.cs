@@ -52,7 +52,7 @@ namespace MagicMessagebus.Implementation
             }
         }
 
-        [Obsolete("Should only be used in tests when you now new assemblies are loaded after MagicMessagebus has ")]
+        [Obsolete("Should only be used in tests when you now new assemblies are loaded after MagicMessagebus has been initialized")]
         public void Reset()
         {
             lock (key)
