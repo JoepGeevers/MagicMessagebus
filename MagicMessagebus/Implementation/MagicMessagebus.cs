@@ -43,51 +43,65 @@ namespace MagicMessagebus.Implementation
                 {
                     if (Map == null)
                     {
-                        Map = AppDomain.CurrentDomain.GetAssemblies()
-                            .Where(a => false == a.IsDynamic)
-                            .Where(a => a.FullName.StartsWith("MagicMessagebus,") || this.assemblyFilter.ScanForSubcriptions(a))
-                            .SelectMany(a =>
-                            {
-                                try
-                                {
-                                    return a.GetTypes();
-                                }
-                                catch (Exception e)
-                                {
-                                    e.Data.Add("Assembly", a.FullName);
-                                    e.Data.Add("Version", this.GetType().Assembly.GetName().Version.ToString());
-
-                                    this.errorTracker.Track(e);
-                                }
-
-                                return new Type[0];
-                            })
-                            .Where(t => t.IsClass || t.IsInterface)
-                            .SelectMany(t => t.GetMethods())
-                            .Where(m => m.Name == "Subscribe")
-                            .Where(m => m.IsStatic || m.DeclaringType.IsInterface) // so it works for static methods or interfaces, nothing else
-                            .Where(m =>
-                            {
-                                var parameters = m.GetParameters();
-
-                                if (parameters.Count() != 1)
-                                {
-                                    return false;
-                                }
-
-                                return parameters.Single().ParameterType
-                                    .GetInterfaces()
-                                    .Where(i => i.Name == nameof(IMagicMessage))
-                                    .Any();
-                            })
-                            .GroupBy(m => m.GetParameters().Single().ParameterType) // this might not work. you might need the fullname of the parametertype because assemblies may differ
-                            .ToList();
+                        this.CreateMap();
                     }
                 }
 
                 this.Publish(new StartupStaticSelftest(), true);
                 this.Publish(new StartupInstanceSelftest(), true);
             }
+        }
+
+        [Obsolete("Should only be used in tests when you now new assemblies are loaded after MagicMessagebus has ")]
+        public void Reset()
+        {
+            lock (key)
+            {
+                this.CreateMap();
+            }
+        }
+
+        private void CreateMap()
+        {
+            Map = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => false == a.IsDynamic)
+                .Where(a => a.FullName.StartsWith("MagicMessagebus,") || this.assemblyFilter.ScanForSubcriptions(a))
+                .SelectMany(a =>
+                {
+                    try
+                    {
+                        return a.GetTypes();
+                    }
+                    catch (Exception e)
+                    {
+                        e.Data.Add("Assembly", a.FullName);
+                        e.Data.Add("Version", this.GetType().Assembly.GetName().Version.ToString());
+
+                        this.errorTracker.Track(e);
+                    }
+
+                    return new Type[0];
+                })
+                .Where(t => t.IsClass || t.IsInterface)
+                .SelectMany(t => t.GetMethods())
+                .Where(m => m.Name == "Subscribe")
+                .Where(m => m.IsStatic || m.DeclaringType.IsInterface) // so it works for static methods or interfaces, nothing else
+                .Where(m =>
+                {
+                    var parameters = m.GetParameters();
+
+                    if (parameters.Count() != 1)
+                    {
+                        return false;
+                    }
+
+                    return parameters.Single().ParameterType
+                        .GetInterfaces()
+                        .Where(i => i.Name == nameof(IMagicMessage))
+                        .Any();
+                })
+                .GroupBy(m => m.GetParameters().Single().ParameterType) // this might not work. you might need the fullname of the parametertype because assemblies may differ
+                .ToList();
         }
 
         private static readonly object key = new object();
