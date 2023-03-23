@@ -195,8 +195,9 @@ namespace MagicMessagebus.Implementation
                             Data = {
                                     { "Service", service?.GetType().Name },
                                     { "Method", method.Name },
+                                    { "Status", $"{(int)status} {status.ToString()}" },
+                                    { "Type", message.GetType().Name },
                                     { "Message", JsonConvert.SerializeObject(message, Formatting.Indented) },
-                                    { "Status", status },
                             },
                         };
                     }

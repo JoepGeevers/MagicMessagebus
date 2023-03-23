@@ -6,6 +6,7 @@ namespace MagicMessagebus.Implementation.Test
 
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Newtonsoft.Json;
     using Ninject;
     using NSubstitute;
 
@@ -150,6 +151,12 @@ namespace MagicMessagebus.Implementation.Test
             // assert
             Assert.IsNotNull(caught);
             Assert.IsInstanceOfType(caught, typeof(MagicMessagebusException));
+
+            Assert.AreEqual(nameof(InstanceKissReceiver), caught.Data["Service"]);
+            Assert.AreEqual("Subscribe", caught.Data["Method"]);
+            Assert.AreEqual("405 MethodNotAllowed", caught.Data["Status"]);
+            Assert.AreEqual(nameof(MerryExplodingChristmas), caught.Data["Type"]);
+            Assert.AreEqual(JsonConvert.SerializeObject(message, Formatting.Indented), caught.Data["Message"]);
         }
     }
 
@@ -174,7 +181,7 @@ namespace MagicMessagebus.Implementation.Test
 
         public HttpStatusCode Subscribe(MerryExplodingChristmas wish)
         {
-            return (HttpStatusCode)987;
+            return HttpStatusCode.MethodNotAllowed;
         }
     }
 
@@ -211,5 +218,6 @@ namespace MagicMessagebus.Implementation.Test
 
     public class MerryExplodingChristmas : IMagicMessage
     {
+        public int SomeProperty { get; set; } = 1234;
     }
 }
