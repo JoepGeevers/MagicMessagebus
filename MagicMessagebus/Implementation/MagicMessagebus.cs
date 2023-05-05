@@ -276,7 +276,7 @@ namespace MagicMessagebus.Implementation
         // because how on earth are you going to get the instance of the service to call the action with?
         // but we can make our own interface of a servicelocator and provide implementations for serviceprovider & ninject
         public static void Subscribe<TService, TMessage>(Action<TService, TMessage> fn)
-            where TMessage : IMagicMessage => subs.Add(new Subscription<TService, TMessage>(fn));
+            => subs.Add(new Subscription<TService, TMessage>(fn));
 
         public void PublishV2<T>(T message)
             where T : IMagicMessage => subs.ForEach(s => s.CallIfMatch<T>(message, this.dotnet));
@@ -289,7 +289,6 @@ namespace MagicMessagebus.Implementation
             => services.AddSingleton<MagicMessagebus>();
 
         public static IServiceCollection WithSubscription<TService, TMessage>(this IServiceCollection services, Action<TService, TMessage> fn)
-            where TMessage : IMagicMessage
         {
             MagicMessagebus.Subscribe(fn);
 

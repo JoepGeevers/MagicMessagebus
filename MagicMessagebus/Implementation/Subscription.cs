@@ -14,7 +14,6 @@
         }
 
         public void CallIfMatch<T>(T message, IServiceProvider provider)
-            where T : Contract.IMagicMessage
         {
             if (typeof(T).Equals(typeof(TMessage)))
             {
