@@ -8,10 +8,7 @@
     {
         public readonly Action<TService, TMessage> fn;
 
-        public Subscription(Action<TService, TMessage> fn)
-        {
-            this.fn = fn;
-        }
+        public Subscription(Action<TService, TMessage> fn) => this.fn = fn;
 
         public void CallIfMatch<T>(T message, IServiceProvider provider)
         {
