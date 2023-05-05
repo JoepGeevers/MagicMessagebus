@@ -9,6 +9,7 @@ namespace MagicMessagebus.Implementation
     using System.Threading.Tasks;
 
     using Geevers.Infrastructure;
+    using Microsoft.Extensions.DependencyInjection;
     using Newtonsoft.Json;
     using Ninject;
 
@@ -21,9 +22,14 @@ namespace MagicMessagebus.Implementation
         private readonly IKernel ninject;
         private readonly IServiceProvider dotnet;
 
+        private static Dictionary<(Type, Type), dynamic> subscriptions = new Dictionary<(Type, Type), dynamic>();
+
+        public MagicMessagebus(IServiceProvider dotnet, IErrorTracker errorTracker = null)
+        {
+        }
 
         public MagicMessagebus(IServiceProvider dotnet, IMagicMessagebusAssemblyFilter assemblyFilter = null, IErrorTracker errorTracker = null)
-            : this(assemblyFilter, errorTracker, dotnet) { }
+    : this(assemblyFilter, errorTracker, dotnet) { }
 
         [Inject]
         public MagicMessagebus(IKernel ninject, [Optional] IMagicMessagebusAssemblyFilter assemblyFilter, [Optional] IErrorTracker errorTracker)
@@ -257,6 +263,37 @@ namespace MagicMessagebus.Implementation
         public HttpStatusCode Subscribe(StartupInstanceSelftest message)
         {
             return (HttpStatusCode)299;
+        }
+
+        public MagicMessagebus(IServiceProvider serviceProvider)
+        {
+            this.dotnet = serviceProvider;
+        }
+
+        private static List<ISubscription> subs = new List<ISubscription>();
+
+        // it does not make sense to have subscriptions without DI container
+        // because how on earth are you going to get the instance of the service to call the action with?
+        // but we can make our own interface of a servicelocator and provide implementations for serviceprovider & ninject
+        public static void Subscribe<TService, TMessage>(Action<TService, TMessage> fn)
+            where TMessage : IMagicMessage => subs.Add(new Subscription<TService, TMessage>(fn));
+
+        public void PublishV2<T>(T message)
+            where T : IMagicMessage => subs.ForEach(s => s.CallIfMatch<T>(message, this.dotnet));
+    }
+
+
+    public static class ext
+    {
+        public static IServiceCollection AddMagicMessagebus(this IServiceCollection services)
+            => services.AddSingleton<MagicMessagebus>();
+
+        public static IServiceCollection WithSubscription<TService, TMessage>(this IServiceCollection services, Action<TService, TMessage> fn)
+            where TMessage : IMagicMessage
+        {
+            MagicMessagebus.Subscribe(fn);
+
+            return services;
         }
     }
 }
