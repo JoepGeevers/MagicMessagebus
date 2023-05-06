@@ -10,26 +10,21 @@
     {
         static void Main()
         {
+            Whatsub.Subscribe<WelcomeMessage>((m) => { });
+
             var message = new WelcomeMessage
             {
                 Body = "Hello, World!",
             };
 
-            MagicMessagebus.Publish(message);
+            Whatsub.Publish(message);
 
             Thread.Sleep(100); // It's fire and forget, so we need the message to get through before the application finishes
         }
     }
 
-    public static class Audience
-    {
-        public static void Subscribe(WelcomeMessage message)
-        {
-            Console.WriteLine(message.Body);
-        }
-    }
 
-    public class WelcomeMessage : IMagicMessage
+    public class WelcomeMessage
     {
         public string Body { get; set; }
     }

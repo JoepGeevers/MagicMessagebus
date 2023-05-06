@@ -13,7 +13,6 @@
             var provider = new ServiceCollection()
                 .AddSingleton<IWakeUpSometimes, ComputerProgram>()
                 .AddSingleton<IWriteToTheConsole, ConsoleWriter>()
-                .AddSingleton<IMagicMessagebus, MagicMessagebus>()
                 .BuildServiceProvider();
 
             var waker = provider.GetService<IWakeUpSometimes>();

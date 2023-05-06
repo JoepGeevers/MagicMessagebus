@@ -2,8 +2,13 @@
 {
     using System;
 
-    internal interface ISubscription
+    public interface IServiceLocatorSubscription
     {
-        void CallIfMatch<T>(T message, IServiceProvider provider);
+        void Invoke<TMessage>(TMessage message, IServiceProvider provider = null);
+    }
+
+    public interface IStaticSubscription
+    {
+        void Invoke<TMessage>(TMessage message);
     }
 }

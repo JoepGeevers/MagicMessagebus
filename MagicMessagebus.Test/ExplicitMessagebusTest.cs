@@ -5,6 +5,7 @@
     using Implementation;
     using NSubstitute;
     using System.ComponentModel.DataAnnotations;
+    using System;
 
     [TestClass]
     public class ExplicitMessagebusTest
@@ -17,38 +18,39 @@
             var fakeWriteToTheConsole = Substitute.For<IWriteToTheConsole>();
 
             collection
-                .AddSingleton<IWriteToTheConsole>(x => fakeWriteToTheConsole)
+                .AddSingleton(x => fakeWriteToTheConsole)
                 .AddMagicMessagebus()
-                .WithSubscription<IWriteToTheConsole, HelloWorld>((s, m) => s.Subscribe(m));
+                .WithSubscription<IWriteToTheConsole, HelloWorld>((s, m) => s.WriteLine(m.Message));
 
             var provider = collection.BuildServiceProvider();
 
-            var messagebus = provider.GetService<MagicMessagebus>();
+            var messagebus = provider.GetService<IWhatsub>();
 
-            var hello = new HelloWorld();
+            var hello = new HelloWorld
+            {
+                Message = "hello",
+            };
 
-            messagebus.PublishV2 (hello);
+            messagebus.Publish(hello);
 
             fakeWriteToTheConsole
                 .Received(1)
-                .Subscribe(hello);
+                .WriteLine(hello.Message);
         }
     }
 
     public class HelloWorld : Contract.IMagicMessage
     {
+        public string Message { get; set; }
     }
     
     public class WriteToTheConsole : IWriteToTheConsole
     {
-        public void Subscribe(HelloWorld m)
-        {
-            throw new System.NotImplementedException();
-        }
+        public void WriteLine(string line) => Console.WriteLine(line);
     }
 
     public interface IWriteToTheConsole
     {
-        void Subscribe(HelloWorld m);
+        void WriteLine(string message);
     }
 }

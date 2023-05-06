@@ -15,7 +15,6 @@
 
             kernel.Bind<IWakeUpSometimes>().To<ComputerProgram>().InSingletonScope();
             kernel.Bind<IWriteToTheConsole>().To<ConsoleWriter>().InSingletonScope();
-            kernel.Bind<IMagicMessagebus>().To<MagicMessagebus>().InSingletonScope();
 
             var waker = kernel.Get<IWakeUpSometimes>();
 
