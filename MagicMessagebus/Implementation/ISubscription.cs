@@ -4,7 +4,7 @@
 
     public interface IServiceLocatorSubscription
     {
-        void Invoke<TMessage>(TMessage message, IServiceProvider provider = null);
+        void Invoke<TMessage>(TMessage message, IServiceLocator locator);
     }
 
     public interface IStaticSubscription

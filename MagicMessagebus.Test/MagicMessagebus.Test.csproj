@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MagicMessagebus.Test.SomeAssembly\MagicMessagebusTest.SomeAssembly.csproj" />
     <ProjectReference Include="..\MagicMessagebus\MagicMessagebus.csproj" />
   </ItemGroup>
 

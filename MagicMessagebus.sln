@@ -15,8 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NinjectMagicMessagebusExamp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceCollectionMagicMessagebusExample", "ServiceCollectionMagicMessagebusExample\ServiceCollectionMagicMessagebusExample.csproj", "{08294FBD-70CE-4A28-AA7D-5EFB35937BEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicMessagebusTest.SomeAssembly", "MagicMessagebus.Test.SomeAssembly\MagicMessagebusTest.SomeAssembly.csproj", "{C724537E-A73B-4FBD-B6B2-82E0EAC56106}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,10 +41,6 @@ Global
 		{08294FBD-70CE-4A28-AA7D-5EFB35937BEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08294FBD-70CE-4A28-AA7D-5EFB35937BEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08294FBD-70CE-4A28-AA7D-5EFB35937BEE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C724537E-A73B-4FBD-B6B2-82E0EAC56106}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C724537E-A73B-4FBD-B6B2-82E0EAC56106}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C724537E-A73B-4FBD-B6B2-82E0EAC56106}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C724537E-A73B-4FBD-B6B2-82E0EAC56106}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

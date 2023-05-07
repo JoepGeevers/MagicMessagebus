@@ -6,8 +6,15 @@
 
     public static class WhatsubServiceProviderExtensions
     {
-        public static IServiceCollection AddMagicMessagebus(this IServiceCollection services)
-            => services.AddSingleton<Whatsub>();
+        // also create example for ninject
+        public static IServiceCollection AddWhatsub(this IServiceCollection services)
+        {
+            Whatsub.Clear();
+
+            return services
+                .AddSingleton<Whatsub>()
+                .AddSingleton<IServiceLocator, ServiceProviderServiceLocator>();
+        }
 
         public static IServiceCollection WithSubscription<TService, TMessage>(this IServiceCollection services, Action<TService, TMessage> fn)
         {

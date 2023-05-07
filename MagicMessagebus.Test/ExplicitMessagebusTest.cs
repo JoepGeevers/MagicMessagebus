@@ -6,6 +6,7 @@
     using NSubstitute;
     using System.ComponentModel.DataAnnotations;
     using System;
+    using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 
     [TestClass]
     public class ExplicitMessagebusTest
@@ -17,21 +18,23 @@
 
             var fakeWriteToTheConsole = Substitute.For<IWriteToTheConsole>();
 
+            collection.AddSingleton(x => fakeWriteToTheConsole);
+            collection.AddSingleton(x => fakeWriteToTheConsole);
+
             collection
-                .AddSingleton(x => fakeWriteToTheConsole)
-                .AddMagicMessagebus()
+                .AddWhatsub()
                 .WithSubscription<IWriteToTheConsole, HelloWorld>((s, m) => s.WriteLine(m.Message));
 
             var provider = collection.BuildServiceProvider();
-
-            var messagebus = provider.GetService<IWhatsub>();
+            
+            var whatsub = provider.GetService<Whatsub>();
 
             var hello = new HelloWorld
             {
                 Message = "hello",
             };
 
-            messagebus.Publish(hello);
+            whatsub.Publish(hello);
 
             fakeWriteToTheConsole
                 .Received(1)

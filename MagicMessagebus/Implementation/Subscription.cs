@@ -10,11 +10,11 @@
 
         public Subscription(Action<TService, TMessage> fn) => this.fn = fn;
 
-        public void Invoke<T>(T message, IServiceProvider provider)
+        public void Invoke<T>(T message, IServiceLocator locator)
         {
             if (typeof(T).Equals(typeof(TMessage)))
             {
-                var service = provider.GetService<TService>();
+                var service = locator.Get<TService>();
 
                 this.fn.Invoke(service, (TMessage)(object)message);
             }

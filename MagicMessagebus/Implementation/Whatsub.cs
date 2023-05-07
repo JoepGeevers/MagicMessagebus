@@ -2,16 +2,25 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data;
 
-    public class Whatsub : IWhatsub
+    public class Whatsub
     {
         private static readonly List<IServiceLocatorSubscription> serviceLocatorSubscription = new List<IServiceLocatorSubscription>();
         private static readonly List<IStaticSubscription> staticSubscription = new List<IStaticSubscription>();
 
-        // change this into our own IServiceLocator and have the extensions wrap the actual container
-        private readonly IServiceProvider dotnet;
+        private readonly IServiceLocator locator;
 
-        public Whatsub(IServiceProvider serviceProvider) => this.dotnet = serviceProvider;
+        public Whatsub(IServiceLocator locator)
+        {
+            this.locator = locator;
+        }
+
+        public static void Clear()
+        {
+            serviceLocatorSubscription.Clear();
+            staticSubscription.Clear();
+        }
 
         public static void Subscribe<TService, TMessage>(Action<TService, TMessage> fn)
             => serviceLocatorSubscription.Add(new Subscription<TService, TMessage>(fn));
@@ -19,21 +28,10 @@
         public static void Subscribe<TMessage>(Action<TMessage> fn)
             => staticSubscription.Add(new Subscription<TMessage>(fn));
 
-        void IWhatsub.Publish<TMessage>(TMessage message)
+        public void Publish<TMessage>(TMessage message)
         {
-            serviceLocatorSubscription.ForEach(s => s.Invoke(message, this.dotnet));
-
-            Publish(message);
-        }
-
-        public static void Publish<TMessage>(TMessage message)
-        {
+            serviceLocatorSubscription.ForEach(s => s.Invoke(message, locator));
             staticSubscription.ForEach(s => s.Invoke(message));
         }
-    }
-
-    public interface IWhatsub
-    {
-        void Publish<TMessage>(TMessage message);
     }
 }
