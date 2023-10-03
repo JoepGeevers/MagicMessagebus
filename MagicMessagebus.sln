@@ -3,13 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagicMessagebus.Test", "MagicMessagebus.Test\MagicMessagebus.Test.csproj", "{C2DAA0C7-6610-4843-A5F9-CA9155F06708}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Whatsub.Test", "MagicMessagebus.Test\Whatsub.Test.csproj", "{C2DAA0C7-6610-4843-A5F9-CA9155F06708}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagicMessagebus", "MagicMessagebus\MagicMessagebus.csproj", "{FF6FB771-864F-4A4C-92F1-1BC21CA141BE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{6F00E322-1914-45E6-9A1A-A6D54FC4388C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleStaticMagicMessagebusExample", "SimpleStaticMagicMessagebusExample\SimpleStaticMagicMessagebusExample.csproj", "{C90A8806-874F-425C-A60D-03A74B7040A9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NinjectMagicMessagebusExample", "NinjectMagicMessagebusExample\NinjectMagicMessagebusExample.csproj", "{CF43D6BD-2CEB-468B-B877-A53091965C32}"
 EndProject
@@ -29,10 +27,6 @@ Global
 		{FF6FB771-864F-4A4C-92F1-1BC21CA141BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF6FB771-864F-4A4C-92F1-1BC21CA141BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF6FB771-864F-4A4C-92F1-1BC21CA141BE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C90A8806-874F-425C-A60D-03A74B7040A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C90A8806-874F-425C-A60D-03A74B7040A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C90A8806-874F-425C-A60D-03A74B7040A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C90A8806-874F-425C-A60D-03A74B7040A9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CF43D6BD-2CEB-468B-B877-A53091965C32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CF43D6BD-2CEB-468B-B877-A53091965C32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF43D6BD-2CEB-468B-B877-A53091965C32}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -46,7 +40,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{C90A8806-874F-425C-A60D-03A74B7040A9} = {6F00E322-1914-45E6-9A1A-A6D54FC4388C}
 		{CF43D6BD-2CEB-468B-B877-A53091965C32} = {6F00E322-1914-45E6-9A1A-A6D54FC4388C}
 		{08294FBD-70CE-4A28-AA7D-5EFB35937BEE} = {6F00E322-1914-45E6-9A1A-A6D54FC4388C}
 	EndGlobalSection

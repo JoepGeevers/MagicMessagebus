@@ -1,14 +1,7 @@
-﻿namespace MagicMessagebus.Implementation
+﻿namespace Whatsub
 {
-    using System;
-
-    public interface IServiceLocatorSubscription
+    public interface ISubscription
     {
-        void Invoke<TMessage>(TMessage message, IServiceLocator locator);
-    }
-
-    public interface IStaticSubscription
-    {
-        void Invoke<TMessage>(TMessage message);
+        void InvokeIf<TMessage>(TMessage message, IServiceLocator locator);
     }
 }

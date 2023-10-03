@@ -1,37 +1,20 @@
-﻿namespace MagicMessagebus.Implementation
+﻿namespace Whatsub
 {
     using System;
 
-    using Microsoft.Extensions.DependencyInjection;
-
-    public class Subscription<TService, TMessage> : IServiceLocatorSubscription
+    public class Subscription<TService, TMessage> : ISubscription
     {
-        public readonly Action<TService, TMessage> fn;
+        public readonly Func<TService, TMessage, Status> fn;
 
-        public Subscription(Action<TService, TMessage> fn) => this.fn = fn;
+        public Subscription(Func<TService, TMessage, Status> fn) => this.fn = fn;
 
-        public void Invoke<T>(T message, IServiceLocator locator)
+        public void InvokeIf<T>(T message, IServiceLocator locator)
         {
             if (typeof(T).Equals(typeof(TMessage)))
             {
                 var service = locator.Get<TService>();
 
                 this.fn.Invoke(service, (TMessage)(object)message);
-            }
-        }
-    }
-
-    public class Subscription<TMessage> : IStaticSubscription
-    {
-        public readonly Action<TMessage> fn;
-
-        public Subscription(Action<TMessage> fn) => this.fn = fn;
-
-        public void Invoke<T>(T message)
-        {
-            if (typeof(T).Equals(typeof(TMessage)))
-            {
-                this.fn.Invoke((TMessage)(object)message);
             }
         }
     }

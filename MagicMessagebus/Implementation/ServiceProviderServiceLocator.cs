@@ -1,4 +1,4 @@
-﻿namespace MagicMessagebus.Implementation
+﻿namespace Whatsub
 {
     using System;
 
@@ -10,7 +10,7 @@
 
         public ServiceProviderServiceLocator(IServiceProvider provider)
         {
-            this.provider=provider;
+            this.provider = provider;
         }
 
         public TService Get<TService>()

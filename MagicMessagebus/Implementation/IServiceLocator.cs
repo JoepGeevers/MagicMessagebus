@@ -1,4 +1,4 @@
-﻿namespace MagicMessagebus.Implementation
+﻿namespace Whatsub
 {
     public interface IServiceLocator
     {

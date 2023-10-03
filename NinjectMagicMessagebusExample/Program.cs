@@ -4,7 +4,6 @@
     using System.Threading;
 
     using MagicMessagebus.Contract;
-    using MagicMessagebus.Implementation;
     using Ninject;
 
     class Program

@@ -1,12 +1,12 @@
 ﻿namespace MagicMessagebus.Implementation.Test
 {
+    using System;
+
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Implementation;
     using NSubstitute;
-    using System.ComponentModel.DataAnnotations;
-    using System;
-    using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
+
+    using Whatsub;
 
     [TestClass]
     public class ExplicitMessagebusTest
@@ -16,20 +16,20 @@
         {
             var collection = new ServiceCollection();
 
-            var fakeWriteToTheConsole = Substitute.For<IWriteToTheConsole>();
+            var fakeWriteToTheConsole = Substitute.For<ITicketService>();
 
             collection.AddSingleton(x => fakeWriteToTheConsole);
             collection.AddSingleton(x => fakeWriteToTheConsole);
 
             collection
                 .AddWhatsub()
-                .WithSubscription<IWriteToTheConsole, HelloWorld>((s, m) => s.WriteLine(m.Message));
+                .WithSubscription<ITicketService, TicketCreated>((s, m) => s.BookTicket(m.Message));
 
             var provider = collection.BuildServiceProvider();
             
             var whatsub = provider.GetService<Whatsub>();
 
-            var hello = new HelloWorld
+            var hello = new TicketCreated
             {
                 Message = "hello",
             };
@@ -38,22 +38,27 @@
 
             fakeWriteToTheConsole
                 .Received(1)
-                .WriteLine(hello.Message);
+                .BookTicket(hello.Message);
         }
     }
 
-    public class HelloWorld : Contract.IMagicMessage
+    public class TicketCreated : Contract.IMagicMessage
     {
         public string Message { get; set; }
     }
     
-    public class WriteToTheConsole : IWriteToTheConsole
+    public class WriteToTheConsole : ITicketService
     {
-        public void WriteLine(string line) => Console.WriteLine(line);
+        public Status BookTicket(string line)
+        {
+            Console.WriteLine(line);
+
+            return Status.NoContent;
+        }
     }
 
-    public interface IWriteToTheConsole
+    public interface ITicketService
     {
-        void WriteLine(string message);
+        Status BookTicket(string message);
     }
 }

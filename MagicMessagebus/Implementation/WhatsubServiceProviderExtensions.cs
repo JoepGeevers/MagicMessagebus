@@ -1,4 +1,4 @@
-﻿namespace MagicMessagebus.Implementation
+﻿namespace Whatsub
 {
     using System;
 
@@ -9,18 +9,31 @@
         // also create example for ninject
         public static IServiceCollection AddWhatsub(this IServiceCollection services)
         {
-            Whatsub.Clear();
-
             return services
                 .AddSingleton<Whatsub>()
                 .AddSingleton<IServiceLocator, ServiceProviderServiceLocator>();
         }
 
-        public static IServiceCollection WithSubscription<TService, TMessage>(this IServiceCollection services, Action<TService, TMessage> fn)
+        public static IServiceCollection WithSubscription<TService, TMessage>(this IServiceCollection services, Func<TService, TMessage, Status> fn)
         {
             Whatsub.Subscribe(fn);
 
             return services;
         }
+    }
+
+    public enum Status
+    {
+        OK = 200,
+        Created = 201,
+        Accepted = 202,
+        NoContent = 204,
+        BadRequest = 400,
+        Unauthorized = 401,
+        Forbidden = 403,
+        NotFound = 404,
+        Conflict = 409,
+        InternalServerError = 500,
+        NotImplemented = 501,
     }
 }
